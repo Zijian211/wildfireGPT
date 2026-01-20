@@ -1,5 +1,6 @@
 # data files
 data/
+!data/wildfire_literature.csv
 
 **/session_state.pkl
 
