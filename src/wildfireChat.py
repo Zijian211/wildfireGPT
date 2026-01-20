@@ -1,3 +1,9 @@
+import sys
+import os
+
+# Tells Python to look at the project root, not just inside the 'src' folder.
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.assistants.assistant_router import AssistantRouter
 import streamlit as st
 import clipboard
