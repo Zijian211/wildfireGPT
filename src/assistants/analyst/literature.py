@@ -26,7 +26,7 @@ def get_doi_by_title(title):
         return "Failed to fetch data"
 
 # Load data
-df = pd.read_csv('./data/wildfire_literature.csv')
+df = pd.read_csv('./data/wildfire_literature.csv.gz')
 df['combined_text'] = df['title'] + ' ' + df['abstract'] + ' ' + df['field']
 
 from sentence_transformers import SentenceTransformer
