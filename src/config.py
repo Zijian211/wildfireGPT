@@ -21,7 +21,7 @@ try:
         print("☁️ Detected Cloud Environment: Using Groq API")
         api_key = st.secrets["GROQ_API_KEY"]
         base_url = "https://api.groq.com/openai/v1"
-        model = "llama3-8b-8192"
+        model = "llama-3.3-70b-versatile"
 except Exception:
     # If secrets file is missing, we just ignore it and fall through to local checks
     pass
