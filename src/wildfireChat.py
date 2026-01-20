@@ -237,3 +237,27 @@ else:
         
         st.session_state.messages.append({"role": "assistant", "content": full_response})
         st.rerun()
+
+# --- DEBUG SECTION ---
+with st.sidebar:
+    st.divider()
+    st.header("🔧 Connection Doctor")
+    if st.button("Test Groq Connection"):
+        import src.config as config
+        from openai import OpenAI
+        
+        st.write("Checking configuration...")
+        st.write(f"**API Key found?** {'Yes' if config.api_key else 'No'}")
+        st.write(f"**Model:** `{config.model}`")
+        st.write(f"**Base URL:** `{config.base_url}`")
+        
+        try:
+            client = OpenAI(api_key=config.api_key, base_url=config.base_url)
+            response = client.chat.completions.create(
+                model=config.model,
+                messages=[{"role": "user", "content": "Say 'Connection successful!'"}],
+                max_tokens=20
+            )
+            st.success(response.choices[0].message.content)
+        except Exception as e:
+            st.error(f"❌ CONNECTION FAILED: {e}")
