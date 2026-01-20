@@ -182,3 +182,7 @@ chat_history/
 
 # 3. Streamlit Cloud Secrets (Contains API Keys)
 .streamlit/secrets.toml
+
+# 4. Data Files (Contains Processed Data and Embeddings)
+data/wildfire_index.bin
+data/document_embeddings.pkl

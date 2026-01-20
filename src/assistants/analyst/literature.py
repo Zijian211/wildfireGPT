@@ -1,5 +1,12 @@
 import pandas as pd
 import requests
+import gzip
+import shutil
+import tempfile
+import os
+from sentence_transformers import SentenceTransformer
+import faiss
+import numpy as np
 
 def get_doi_by_title(title):
     # URL for the Crossref API
@@ -25,17 +32,21 @@ def get_doi_by_title(title):
     else:
         return "Failed to fetch data"
 
-# Load data
+# Load data (Updated to read compressed .gz file)
 df = pd.read_csv('./data/wildfire_literature.csv.gz')
 df['combined_text'] = df['title'] + ' ' + df['abstract'] + ' ' + df['field']
 
-from sentence_transformers import SentenceTransformer
-import faiss
-import numpy as np
 
+# Initialize FAISS index (Updated to read compressed .bin.gz file)
+# We must unzip it to a temp file first because FAISS reads directly from disk
+with tempfile.NamedTemporaryFile(delete=False) as tmp:
+    with gzip.open("./data/wildfire_index.bin.gz", 'rb') as f_in:
+        shutil.copyfileobj(f_in, tmp)
+    temp_index_name = tmp.name
 
-# Initialize FAISS index
-index = faiss.read_index("./data/wildfire_index.bin")
+index = faiss.read_index(temp_index_name)
+os.remove(temp_index_name) # Clean up temp file
+
 
 # Load a sentence transformer model
 model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
