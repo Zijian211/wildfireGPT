@@ -22,11 +22,6 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.username = ""
 
-# --- HELPER FUNCTIONS (Preserved) ---
-def on_copy_click(text):
-    st.session_state.copied.append(text)
-    clipboard.copy(text)
-
 def display_feedback(message, index, file):
     increment = 0
     if message["role"] == "assistant":
@@ -35,7 +30,7 @@ def display_feedback(message, index, file):
             if feedback_key not in st.session_state:
                 st.session_state[feedback_key] = ""
 
-        st.button("📋", on_click=on_copy_click, args=(message["content"],), key=index)
+        st.code(message["content"], language=None)
 
         feedback_dict = {}
         with st.expander("Click to provide feedback"):
