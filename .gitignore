@@ -2,7 +2,12 @@
 data/
 !data/wildfire_literature.csv.gz
 
-**/session_state.pkl
+# Ignore the big compressed files
+data/wildfire_index.bin.gz
+data/document_embeddings.pkl.gz
+
+# But allow the split parts!
+!data/*.part*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -182,7 +187,3 @@ chat_history/
 
 # 3. Streamlit Cloud Secrets (Contains API Keys)
 .streamlit/secrets.toml
-
-# 4. Data Files (Contains Processed Data and Embeddings)
-data/wildfire_index.bin
-data/document_embeddings.pkl
