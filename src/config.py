@@ -33,7 +33,7 @@ if api_key is None:
         print("☁️ Detected Local .env Key: Using Groq API")
         api_key = os.getenv("GROQ_API_KEY")
         base_url = "https://api.groq.com/openai/v1"
-        model = "llama3-8b-8192"
+        model = "llama-3.3-70b-versatile"
 
     else:
         # --- LOCALHOST MODE (Offline / LM Studio) ---

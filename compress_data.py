@@ -1,12 +1,23 @@
-import pandas as pd
+import gzip
+import shutil
 import os
 
-print("⏳ Reading huge CSV file...")
-# Read the big file
-df = pd.read_csv('data/wildfire_literature.csv')
+files_to_compress = [
+    "data/wildfire_index.bin",
+    "data/document_embeddings.pkl"
+]
 
-print("📦 Compressing to .gz...")
-# Save it as a compressed GZIP file
-df.to_csv('data/wildfire_literature.csv.gz', index=False, compression='gzip')
+print("⏳ Starting compression job...")
 
-print("✅ Done! New file created: data/wildfire_literature.csv.gz")
+for file_path in files_to_compress:
+    if os.path.exists(file_path):
+        output_path = file_path + ".gz"
+        print(f"📦 Compressing {file_path} -> {output_path}...")
+        
+        with open(file_path, 'rb') as f_in:
+            with gzip.open(output_path, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+    else:
+        print(f"⚠️ Could not find {file_path}, skipping...")
+
+print("✅ Compression complete! You can now upload the .gz files.")
