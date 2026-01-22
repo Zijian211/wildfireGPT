@@ -8,13 +8,45 @@ PURPLE = '\033[95m'
 ENDC = '\033[0m'  # Reset to default color
 
 
-def find_previous_user_query(interactions, llm_response_first_sentence):
+def normalize_text(text):
+    """
+    Removes all whitespace, tabs, and newlines.
+    Output: "helloworld" for input "hello \n world"
+    Usage: Allows matching text even if formatting differs.
+    """
+    if not text:
+        return ""
+    return "".join(text.split())
+
+
+def find_previous_user_query(interactions, llm_response_fragment):
+    """
+    Scans the chat history to find the User prompt that triggered a specific AI response.
+    Uses 'fuzzy' matching (ignoring whitespace) to be robust against formatting changes.
+    """
     last_user_content = None
+    
+    if not interactions or not llm_response_fragment:
+        return None
+
+    # Prepare the search fragment (clean up the text we are looking for)
+    clean_fragment = normalize_text(llm_response_fragment)
+    
+    # Safety: If the fragment is tiny (e.g. just "Yes"), don't use it for matching
+    if len(clean_fragment) < 5:
+        return None
+
     for entry in interactions:
         if entry['role'] == 'user':
             last_user_content = entry['content']
-        elif entry['role'] == 'assistant' and llm_response_first_sentence in entry['content']:
-            return last_user_content, entry
+        elif entry['role'] == 'assistant':
+            # Normalize the history content to match the fragment
+            clean_content = normalize_text(entry['content'])
+            
+            # Check if our fragment exists inside this history entry
+            if clean_fragment in clean_content:
+                return last_user_content, entry
+                
     return None
 
 
@@ -36,17 +68,37 @@ def parse_tool_file(content, interactions):
             continue  # Skip this pair
 
         # Separate the Instruction and Tool Outputs
-        parts = tool_outputs.split('----------', 1)
-        tool_outputs = parts[0].strip()
-        # remainder = parts[1].strip()
+        try:
+            parts = tool_outputs.split('----------', 1)
+            tool_outputs = parts[0].strip()
+        except Exception:
+            continue
 
         # Determine the type based on the presence of 'Title' or 'title'
         type_value = 'literature' if 'title:' in tool_outputs.lower() else 'values_and_recommendations'
-        #print(f"{PURPLE}tool_outputs{ENDC}", tool_outputs, f"{PURPLE}type{ENDC}", type_value, f"{PURPLE}llm_response{ENDC}", llm_response)
-        # Find previous user query that matches the first sentence of the llm_response
-        first_sentence = llm_response.split('\n')[1].strip()
-        previous_query, current_entry = find_previous_user_query(interactions, first_sentence)
-        #print(f"{PURPLE}previous_query{ENDC}", previous_query)
+        
+        # --- CRASH PROOFING & ROBUST MATCHING ---
+        # 1. Safely extract the first REAL sentence (skipping empty lines)
+        response_lines = llm_response.split('\n')
+        first_sentence = ""
+        
+        # Skip the first line (header) and find the first non-empty content line
+        for line in response_lines[1:]:
+            if line.strip():
+                first_sentence = line.strip()
+                break
+        
+        # 2. Safely find the match using normalized text
+        search_result = find_previous_user_query(interactions, first_sentence)
+        
+        # 3. Check if we found anything. If None, skip this entry.
+        if search_result is None:
+            # print(f"Skipping: Could not link response to chat history.")
+            continue
+            
+        # 4. Unpack safely
+        previous_query, current_entry = search_result
+        # --- END FIX ---
 
         # Initialize dictionary for this pair
         entry = {
@@ -57,16 +109,8 @@ def parse_tool_file(content, interactions):
             'current_entry': current_entry
         }
 
-        # # Extract instructions if present
-        # instructions_match = re.search(r'(# Instructions:|\*\*Instructions\*\*:)(.*?)(?=\*\*LLM Response\*\*|$)', remainder, flags=re.DOTALL)
-        # if instructions_match:
-        #     # Save the part after '# Instructions:' or '**Instructions**:' and before '**LLM Response**'
-        #     entry['instructions'] = instructions_match.group(2).strip()
-        #     # print(f"{PURPLE}instructions{ENDC}", instructions_match.group(2).strip())
-
         results.append(entry)
 
-    # print(results[1])
     return results
 
 
@@ -129,55 +173,53 @@ def convert_scores(input_score, aspect):
     # Regular expression to match all reasoning blocks
     print(f"{PURPLE}response{ENDC}", input_score)
     reasonings = re.findall(r'\(\d+\)\s+(.*?)\n\n', input_score, re.DOTALL)
-    # answers = re.findall(r'\*\*Answer:\*\*(.*?)\n', input_score, re.DOTALL)
-    # answers = [answer.strip() for answer in answers]
-    # print(f"{PURPLE}reasonings{ENDC}", reasonings)
-    # print(f"{PURPLE}answers{ENDC}", answers)
 
-    # Check if input_score is a string that contains a list
-    if isinstance(input_score, str) and "[" in input_score and "]" in input_score:
-        # truncate the input_score to within the brackets
-        print('input_score before', input_score)
-        input_score = input_score[input_score.index("["):input_score.rindex("]") + 1]
-        print('input_score after', input_score)
+    # Check if input_score is a string that contains a list or tuple structure
+    if isinstance(input_score, str) and ("[" in input_score or "(" in input_score):
+        # Clean up string if necessary
+        if "[" in input_score and "]" in input_score:
+            input_score = input_score[input_score.index("["):input_score.rindex("]") + 1]
+        
         try:
-            # Try to convert the input string to a list directly
+            # Try to convert the input string to a list/tuple directly
             input_score = ast.literal_eval(input_score)
         except (ValueError, SyntaxError):
-            # If that fails, apply formatting to ensure valid Python list
-            # Use regex to find unquoted words (assuming words that are not numbers or surrounded by quotes)
+            # Fallback formatting
             input_score = re.sub(r"(?<=\[|\s|,)([^\d\[\]'\"].*?)(?=,|\])", r"'\1'", input_score)
-
-            print('input_score after formatting:', input_score)
-
             try:
-                # Try converting again after formatting
                 input_score = ast.literal_eval(input_score)
             except (ValueError, SyntaxError) as e:
-                print(f"Error in converting input_score to list: {e}")
+                print(f"Error in converting input_score: {e}")
                 return input_score
 
-    # print the type of input_score to debug, use green color for debugging
+    # --- CRITICAL FIX START ---
+    # If it is a tuple, convert it to a list so we can modify it later
+    if isinstance(input_score, tuple):
+        input_score = list(input_score)
+    # --- CRITICAL FIX END ---
+
+    # print the type of input_score to debug
     print(f"{PURPLE}input_score{ENDC}", input_score)
 
     if aspect in ['correctness']:
-        # Check if the input data contains the format '[Num_of_Matches]/[Total_Number]'
         scores = re.findall(r"(\d+)/(\d+)", str(input_score))
         if len(scores) > 0:
             matches, total = map(int, scores[0])
         else:
             matches = total = 0
-
-        print(f"{PURPLE}matches{ENDC}", matches, f"{PURPLE}total{ENDC}", total)
-
         return matches, reasonings, total, 0, input_score
 
     else:
-        if len(input_score) == 3:   # evaluate_accessibility_in_reference
+        # 1. Handle Accessibility logic (3 items) - NOW SAFE because it is a list
+        if isinstance(input_score, list) and len(input_score) == 3:
             for i in [0, 2]:
                 input_score[i] = 'No' if input_score[i] == 'Yes' else 'Yes'
+        
+        # 2. Handle Single Item List
+        if isinstance(input_score, list) and len(input_score) == 1:
+            input_score = input_score[0]
+            
         return input_score, reasonings
-
     
 if __name__ == '__main__':
     print(convert_scores("Yes, 0/8"))

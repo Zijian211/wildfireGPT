@@ -1,0 +1,5 @@
+Profession: Emergency Manager
+Concern: wildfire containment
+Location: Los Angeles
+Time: current
+Scope: county-level

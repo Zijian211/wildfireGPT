@@ -1,0 +1,31 @@
+[
+    {
+        "tool_outputs": "**Tool Outputs**\nTitle: Fire Report\nFound 2 active fires in LA county.",
+        "llm_response": "**LLM Response**\nYes, there are currently active fires reported in Los Angeles.",
+        "type": "literature",
+        "previous_query": "Is there a fire near Los Angeles?",
+        "current_entry": {
+            "role": "assistant",
+            "content": "Yes, there are currently active fires reported in Los Angeles.",
+            "relevance_feedback_q1": "Yes",
+            "relevance_feedback_q2": "Yes",
+            "relevance_feedback_q3": "Yes",
+            "relevance_feedback_q4": "Yes",
+            "relevance_feedback_q5": "Yes",
+            "relevance_feedback_q6": "Yes",
+            "entailment_feedback_q1": "Yes",
+            "accessibility_feedback_q1": "No",
+            "accessibility_feedback_q2": "Yes",
+            "accessibility_feedback_q3": "No"
+        },
+        "auto_score": {
+            "total_score": 0,
+            "total_count": 0,
+            "sbert_score": 0.6167420148849487
+        },
+        "manual_score": {
+            "total_score": 0,
+            "total_count": 0
+        }
+    }
+]

@@ -129,6 +129,13 @@ else:
     user_pkl_path = f"chat_history/{st.session_state.username}_session_state.pkl"
     user_jsonl_path = f"chat_history/{st.session_state.username}_interaction.jsonl"
 
+    # --- Save User Profile for Evaluation ---
+    user_profile_path = f"chat_history/{st.session_state.username}_profile.txt"
+    if not os.path.exists(user_profile_path):
+        with open(user_profile_path, "w") as f:
+            # --- I make this dynamic later based on login settings ---
+            f.write("Profession: Emergency Manager\nConcern: Fire Safety\nLocation: CA\nTime: Now\nScope: Local")
+
     if "messages" not in st.session_state:
         # --- check if the session state variable can be loaded ---
         try:

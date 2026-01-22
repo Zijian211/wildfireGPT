@@ -1,0 +1,19 @@
+case,aspect,human_score,input_score,reasoning
+cases/test_case_1,relevance,Yes,Yes,"Yes
+(2) Yes
+(3) Yes
+(4) Yes
+(5) Yes
+(6) Yes"
+cases/test_case_1,relevance,Yes,Yes,
+cases/test_case_1,relevance,Yes,Yes,
+cases/test_case_1,relevance,Yes,Yes,
+cases/test_case_1,relevance,Yes,Yes,
+cases/test_case_1,relevance,Yes,Yes,
+cases/test_case_1,entailment,Yes,Yes,Yes
+cases/test_case_1,accessibility,Yes,Yes,"Does the response contain too many jargons for someone whose profession is Emergency Manager?**
+No"
+cases/test_case_1,accessibility,Yes,"('Yes',)","Does the response provide enough explanation?**
+Yes"
+cases/test_case_1,accessibility,Yes,Yes,"Does the response contain redundant or useless information?**
+No"

@@ -1,0 +1,6 @@
+**Tool Outputs**
+Title: Fire Report
+Found 2 active fires in LA county.
+----------
+**LLM Response**
+Yes, there are currently active fires reported in Los Angeles.
