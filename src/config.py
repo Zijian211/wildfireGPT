@@ -3,19 +3,17 @@ from dotenv import load_dotenv
 import os
 import streamlit as st
 
-# Load environment variables (for local .env files if you use them)
+# --- Load environment variables ---
 load_dotenv()
 
-# Initialize variables
+# --- Initialize variables ---
 api_key = None
 base_url = None
 model = None
 
 # --- HYBRID CONFIGURATION ---
 
-# 1. Try to get API Key from Streamlit Secrets (Cloud)
-# We wrap this in a try-except block because accessing st.secrets crashes 
-# if no secrets.toml file exists locally.
+# --- 1. Try to get API Key from Streamlit Secrets (Cloud) ---
 try:
     if "GROQ_API_KEY" in st.secrets:
         print("☁️ Detected Cloud Environment: Using Groq API")
@@ -23,10 +21,10 @@ try:
         base_url = "https://api.groq.com/openai/v1"
         model = "llama-3.3-70b-versatile"
 except Exception:
-    # If secrets file is missing, we just ignore it and fall through to local checks
+    # --- If secrets file is missing, just ignore it and fall through to local checks ---
     pass
 
-# 2. If we didn't find cloud keys, check local .env
+# --- 2. If we didn't find cloud keys, check local .env ---
 if api_key is None:
     if os.getenv("GROQ_API_KEY"):
         # --- LOCAL HYBRID MODE (Local laptop using Cloud API) ---
@@ -40,7 +38,7 @@ if api_key is None:
         print("💻 No Cloud Keys found: Using Localhost (LM Studio)")
         api_key = "lm-studio"
         base_url = "http://localhost:1234/v1"
-        # LM Studio uses whatever model is currently loaded
+        # --- LM Studio uses whatever model is currently loaded ---
         model = "local-model"
 
 # --- INITIALIZE CLIENT ---
@@ -50,7 +48,7 @@ client = OpenAI(
 )
 
 # --- DIRECTORY SETUP ---
-# Create a directory for saving the chat history if it doesn't exist
+# --- Create a directory for saving the chat history if it doesn't exist ---
 if not os.path.exists("chat_history"):
     os.makedirs("chat_history")
 

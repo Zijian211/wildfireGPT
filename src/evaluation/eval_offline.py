@@ -23,6 +23,7 @@ from src.evaluation.utils import (
 )
 from src.evaluation.prompts import Prompts
 from src.evaluation.auto import score_sbert_similarity
+# --- IMPORT CLIENT AND CONFIG_MODEL FROM YOUR CONFIG FILE ---
 from src.config import client, model as config_model
 
 
@@ -35,10 +36,22 @@ class Evaluator:
         self.args = args
         self.prompts = Prompts()
         self.case = args.get('case_folder')
+        
+        # --- Model Configuration (FIXED) ---
+        # --- 1. Store the client explicitly from config.py ---
+        self.client = client
 
-        # --- Model Configuration ---
-        # Prioritize command line arg, then config.yaml, then default config.py
-        self.model_name = args.get('llm_model') or config_model
+        # --- 2. Smart Model Selection ---
+        
+        base_url_str = str(self.client.base_url)
+        
+        if "groq.com" in base_url_str or "localhost" in base_url_str:
+            # --- We are in Cloud (Groq) or Localhost (LM Studio) ---
+            print(f"☁️ Cloud/Local Mode Detected: Forcing model to '{config_model}'")
+            self.model_name = config_model
+        else:
+            # --- Use arg if provided, else default ---
+            self.model_name = args.get('llm_model') or config_model
 
         # --- Load Data ---
         self.interaction_history = self._load_interaction_history()
@@ -89,9 +102,6 @@ class Evaluator:
     def generate_eval_response(self, messages_list: List[str]) -> Optional[str]:
         """
         Simulates the Assistant flow using standard Chat Completions.
-        messages_list[0] = System Instruction
-        messages_list[1] = First User Prompt
-        messages_list[2] = (Optional) Second User Prompt
         """
         if not messages_list:
             return None
@@ -103,10 +113,11 @@ class Evaluator:
 
         try:
             # --- Turn 1 ---
-            response = client.chat.completions.create(
+            # --- USE self.client HERE (from config.py) ---
+            response = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=history,
-                temperature=0.1  # Low temp for deterministic grading
+                temperature=0.1 
             )
             reply_text = response.choices[0].message.content
 
@@ -115,7 +126,7 @@ class Evaluator:
                 history.append({"role": "assistant", "content": reply_text})
                 history.append({"role": "user", "content": messages_list[2]})
                 
-                response = client.chat.completions.create(
+                response = self.client.chat.completions.create(
                     model=self.model_name,
                     messages=history,
                     temperature=0.1
@@ -172,47 +183,40 @@ class Evaluator:
             for aspect in ['relevance', 'entailment', 'accessibility']:
                 human_score = parse_current_entry(current_entry, aspect)
                 
-                # --- MODIFIED: Force evaluation even without human labels ---
-                # We comment out the check below to allow "Reference-Free" grading.
-                # valid_human_scores = [s for s in human_score if s != 'Not Applicable']
-                # if not valid_human_scores:
-                #    continue
+                # --- valid_human_scores = [s for s in human_score if s != 'Not Applicable'] ---
 
                 response = self.evaluate_single_aspect(tool_outputs, llm_response, data_type, previous_query, aspect)
                 
                 if response:
                     input_score, reasonings = convert_scores(response, aspect)
 
-                    # --- 🛡️ CRITICAL FIX: Handle Empty Human Scores ---
-                    # If human_score is empty (live data), we must NOT set target_len to 0.
-                    # Instead, we match the length of the AI's output (input_score).
+                    # --- Synchronize List Lengths ---
                     if human_score and len(human_score) > 0:
                         target_len = len(human_score)
                     else:
-                        # No human score? Use AI output length (or default to 1)
+                        # --- Use AI output length or default to 1 ---
                         if isinstance(input_score, list):
                             target_len = len(input_score)
                         else:
                             target_len = 1
-                        # Backfill human_score with "N/A" so columns align
                         human_score = ["N/A"] * target_len
-                    # -----------------------------------------------
 
-                    # 1. Normalize Input Scores
+                    # --- 1. Normalize Input Scores ---
                     if not isinstance(input_score, list):
                         input_score = [input_score] * target_len
                     
-                    # Pad/Truncate Input Scores
+                    # --- Pad/Truncate Input Scores ---
                     input_score = (input_score + ["Error"] * target_len)[:target_len]
 
-                    # 2. Normalize Reasonings
+                    # --- 2. Normalize Reasonings ---
                     if reasonings is None:
                         reasonings = []
                     if not isinstance(reasonings, list):
                         reasonings = [str(reasonings)]
                     
-                    # Pad/Truncate Reasonings
+                    # --- Pad/Truncate Reasonings ---
                     reasonings = (reasonings + [""] * target_len)[:target_len]
+                    # -----------------------------------------------
 
                     new_row = pd.DataFrame({
                         'case': [self.case] * target_len,
@@ -224,7 +228,6 @@ class Evaluator:
                     df = pd.concat([df, new_row], ignore_index=True)
                 else:
                     # --- Handle API failure ---
-                    # Fix: Ensure we write an error row even if human_score is empty
                     fallback_len = len(human_score) if human_score else 1
                     fallback_human = human_score if human_score else ["N/A"]
                     
@@ -264,6 +267,7 @@ class Evaluator:
         csv_path = os.path.join(self.case, 'evaluation.csv')
         df.to_csv(csv_path, index=False)
         print(f"Evaluation complete. Results saved to {csv_path}")
+
 
     # --- Streamlit Methods (Optional UI) ---
     @staticmethod

@@ -1,7 +1,6 @@
 import sys
 import os
 
-# Tells Python to look at the project root, not just inside the 'src' folder.
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.assistants.assistant_router import AssistantRouter
@@ -153,13 +152,10 @@ else:
             st.session_state.location_confirmed = True
             st.session_state.copied = []
 
-            #checklist = '- Profession: Risk Manager\n- Concern: High intensity fire near Las Vegas, NM; primary risk factors to be concerned about.\n- Location: Sangre de Cristo Mountains \n- Time: Immediate measures to mitigate risks\n- Scope: Water resources and unpaved roads\n'
-            #args = {"checklist": checklist}
-            #st.session_state.assistant = AssistantRouter("PlanAssistant", thread_id='thread_jMbfylzr3eXZYSZNwPKspW7x', args=args)
         st.rerun()
     elif "messages" in st.session_state:
         try:
-            with open(user_pkl_path, "wb") as file:  # Modified to use user-specific file
+            with open(user_pkl_path, "wb") as file:  # --- Modified to use user-specific file ---
                 states = {}
                 for key in ["messages", "assistant", "location_confirmed", "copied", "lat", "lon"]:
                     if key in st.session_state.keys():
