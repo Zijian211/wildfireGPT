@@ -13,7 +13,7 @@ class Prompts:
             "For each question, answer 'Yes', 'No', 'Could be better', or 'Not Applicable'. "
             "If the response is vague, generic, or slightly off-topic, mark it as 'Could be better' or 'No'. "
             "Do not give the model the benefit of the doubt. "
-            "Lastly, output a Python list of your responses.",
+            "Output strictly a Python list like ['Yes', 'No', 'Not Applicable']. Do NOT provide any preamble or explanation before the list.",
 
             "Given this model's response: \n" + llm_response + "\n\n"
             "(1) Does the response DIRECTLY answer the user's last question? The question is '" + str(previous_query) + "' Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
@@ -36,7 +36,7 @@ class Prompts:
         message = [
             "You are a Fact-Checker. Your task is to verify if the model's response is supported by the Tool Outputs. "
             "If the model claims something not present in the tool outputs, it is a Hallucination. "
-            "Lastly, output a Python list of your responses.",
+            "Output strictly a Python list like ['Yes', 'No', 'Not Applicable']. Do NOT provide any preamble or explanation before the list.",
 
             "Tool Outputs (Facts): \n" + str(tool_output) + "\n\n"
             "Model Response: \n" + llm_response + "\n\n"
@@ -55,6 +55,7 @@ class Prompts:
         message = [
             "You are a ruthless Editor. Your goal is to keep responses short and concise.",
             "Analyze the model's response length and fluff.",
+            "Output strictly a Python list like ['Yes', 'No']. Do NOT provide any preamble or explanation before the list.",
             "Given this model's response: \n" + llm_response + "\n",
             
             "(1) Is the response concise? Answer 'No' if it contains unnecessary compliments like 'That's a great location!' or 'That's a valid concern!'. Answer 'Yes' only if it gets straight to the point.\n",

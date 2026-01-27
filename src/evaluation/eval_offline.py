@@ -1,4 +1,4 @@
-"""
+""""
 Offline Evaluation Script for WildfireGPT.
 This script evaluates the performance of the LLM by comparing its responses
 against human-annotated guidelines and correctness metrics.
@@ -25,6 +25,10 @@ from src.evaluation.auto import score_sbert_similarity
 
 # --- IMPORT CLIENT AND CONFIG_MODEL FROM YOUR CONFIG FILE ---
 from src.config import client, model as config_model
+
+# --- Define colors for logging ---
+PURPLE = '\033[95m'
+ENDC = '\033[0m'
 
 class Evaluator:
     """
@@ -55,9 +59,12 @@ class Evaluator:
         # --- Load Data ---
         self._log(f"Initializing evaluation for: {self.case}")
         self.interaction_history = self._load_interaction_history()
+        
         # --- The loader handles cases where tools.txt is missing/empty ---
         self.data_dict = self._load_data_robust() 
-        self.user_profile = self._load_user_profile()
+        
+        # --- SMART PROFILE LOADING (Auto-Discovery) ---
+        self.user_profile = self._load_user_profile_smart()
 
     def _log(self, msg):
         """Helper to write debug info."""
@@ -126,14 +133,79 @@ class Evaluator:
             
         return parsed_data
 
-    def _load_user_profile(self) -> Dict:
-        """Loads the user profile."""
-        file_path = os.path.join(self.case, "user_profile.txt")
+    # --- AUTO-DISCOVER PROFILE ---
+    def infer_profile_from_history(self, interactions):
+        """
+        If user_profile.txt is missing, this function asks the LLM 
+        to read the chat history and figure out who the user is.
+        """
+        print(f"{PURPLE}Generating User Profile from Chat History...{ENDC}")
+        self._log("Generating User Profile from Chat History...")
+        
+        # --- 1. Convert chat history to a single string ---
+        chat_text = ""
+        for turn in interactions:
+            role = turn.get('role', 'unknown').upper()
+            content = turn.get('content', '')
+            chat_text += f"{role}: {content}\n"
+        
+        # --- 2. Create a prompt for the LLM ---
+        prompt = (
+            "You are an expert summarizer. Read the following chat history and extract "
+            "the User's profile information to help with evaluation.\n"
+            "Format the output EXACTLY like this:\n"
+            "Name: [Name]\n"
+            "Location: [Location]\n"
+            "Concern: [Concern]\n"
+            "Timeline: [Timeline]\n"
+            "Profession: [Profession]\n\n"
+            "If information is missing, write 'Unknown'.\n\n"
+            f"Chat History:\n{chat_text}"
+        )
+
+        # --- 3. Call the LLM ---
         try:
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.1
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            self._log(f"Error inferring profile: {e}")
+            return "Name: Unknown\nLocation: Unknown"
+
+    def _load_user_profile_smart(self) -> Dict:
+        """
+        Smart loader that auto-generates profile if missing.
+        """
+        file_path = os.path.join(self.case, "user_profile.txt")
+        user_profile_content = ""
+
+        # --- 1. Try to load manual file ---
+        if os.path.exists(file_path):
             with open(file_path, 'r', encoding='utf-8') as f:
-                return parse_user_profile(f.read())
-        except FileNotFoundError:
-            return {'profession': 'General User', 'concern': 'Wildfire Risk', 'location': 'Unknown', 'timeline': 'Unknown'}
+                user_profile_content = f.read()
+        
+        # --- 2. If missing/empty, Auto-Generate ---
+        if not user_profile_content or len(user_profile_content) < 10:
+            if self.interaction_history:
+                user_profile_content = self.infer_profile_from_history(self.interaction_history)
+                # --- Try saving it for reference ---
+                try:
+                    with open(file_path, 'w', encoding='utf-8') as f:
+                        f.write(user_profile_content)
+                except:
+                    pass
+            else:
+                user_profile_content = "Name: Unknown"
+
+        self._log(f"Active User Profile: {user_profile_content[:100]}...")
+        return parse_user_profile(user_profile_content)
+
+    # --- KEEPING OLD LOADER FOR BACKWARD COMPATIBILITY IF NEEDED ---
+    def _load_user_profile(self) -> Dict:
+        return self._load_user_profile_smart()
 
     def generate_eval_response(self, messages_list: List[str]) -> Optional[str]:
         """Simulates the Assistant flow using standard Chat Completions."""
