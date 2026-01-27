@@ -1,151 +1,237 @@
-from src.config import client, model
-import yaml
-import time
-import streamlit as st
+import re
+import ast
+import numpy as np
+from scipy.stats import spearmanr
 
-TEXT_CURSOR = "▕"
+# --- Define the ANSI escape sequence for purple ---
+PURPLE = '\033[95m'
+ENDC = '\033[0m'  # --- Reset to default color ---
 
-# --- MOCK CLASSES FOR DEEPSEEK COMPATIBILITY ---
 
-class MockAssistant:
-    def __init__(self, name, instructions, tools, model):
-        self.id = "mock_assistant_id"
-        self.name = name
-        self.instructions = instructions
-        self.tools = tools
-        self.model = model
-
-class MockThread:
-    def __init__(self):
-        self.id = "mock_thread_id"
-# -----------------------------------------------
-
-def load_config(path):
+def normalize_text(text):
     """
-    This function loads the config file.
+    Removes all whitespace, tabs, and newlines.
+    Output: "helloworld" for input "hello \n world"
+    Usage: Allows matching text even if formatting differs.
     """
-    with open(path, "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
-    return config
+    if not text:
+        return ""
+    return "".join(text.split())
 
-def get_assistant(config, initialize_instructions):
+
+def find_previous_user_query(interactions, llm_response_fragment):
     """
-    This function returns a Mock assistant object because DeepSeek
-    does not support the OpenAI Assistants API.
+    Scans the chat history to find the User prompt that triggered a specific AI response.
+    Uses 'fuzzy' matching (ignoring whitespace) to be robust against formatting changes.
     """
-    name = config["name"]
-    instructions = initialize_instructions()
-    tools = populate_tools(config)
+    last_user_content = None
     
-    # Return a local object containing the configuration instead of calling client.beta.assistants.create
-    assistant = MockAssistant(
-        name=name,
-        instructions=instructions,
-        tools=tools,
-        model=model
-    )
-    
-    # Debug message to let you know this is running on DeepSeek logic
-    print(f"DeepSeek Mode: Mock Assistant '{name}' created locally.")
-    
-    return assistant
-
-def populate_tools(config):
-    """
-    This function populates the tools dictionary with the functions
-    defined in the config file.
-    """
-    tools = []
-    if "available_functions" not in config.keys():
+    if not interactions or not llm_response_fragment:
         return None
-    for tool_name, tool_meta_data in config["available_functions"].items():
-        tool = {}
-        tool["type"] = "function"
-        tool["function"] = {}
-        tool["function"]["name"] = tool_name
-        tool["function"]["description"] = tool_meta_data["description"]
-        tool["function"]["parameters"] = {}
-        tool["function"]["parameters"]["type"] = "object"
-        tool["function"]["parameters"]["properties"] = {}
-        if tool_meta_data["parameters"]:
-            for param_name, param_meta_data in tool_meta_data["parameters"].items():
-                param = {}
-                param["type"] = param_meta_data["type"]
-                param["description"] = param_meta_data["description"]
-                tool["function"]["parameters"]["properties"][param_name] = param
-        tool["function"]["parameters"]["required"] = tool_meta_data["required"]
-        tools.append(tool)
-    return tools
 
-def create_thread():
-    # DeepSeek does not support Threads. We return a mock object.
-    thread = MockThread()
-    return thread
-
-def add_appendix(response: str, appendix_path: str):
-    """
-    This function adds the examples to the response.
+    # --- Prepare the search fragment (clean up the text looking for) ---
+    clean_fragment = normalize_text(llm_response_fragment)
     
-    Args:
-        response (str): The response string.
-        appendix_path (str): The path to the appendix markdown file.
-    """
-    with open(appendix_path, "r") as f:
-        appendix = f.read()
-    response += appendix
-    return response
+    # --- Safety: If the fragment is tiny (e.g. just "Yes"), don't use it for matching ---
+    if len(clean_fragment) < 5:
+        return None
 
-def get_openai_response(messages, top_p = 0.95, max_tokens = 256, temperature = 0.7):
-    # This function uses the standard Chat Completions API for DeepSeek
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        top_p=top_p,
-        max_tokens=max_tokens,
-        temperature=temperature
-    )
+    for entry in interactions:
+        if entry['role'] == 'user':
+            last_user_content = entry['content']
+        elif entry['role'] == 'assistant':
+            # --- Normalize the history content to match the fragment ---
+            clean_content = normalize_text(entry['content'])
+            
+            # --- Check if the fragment exists inside this history entry ---
+            if clean_fragment in clean_content:
+                return last_user_content, entry
+                
+    return None
+
+
+def parse_tool_file(content, interactions):
+    # --- Pattern to find sections with correct delimiter ---
+    sections_pattern = r'\*\*Tool Outputs\*\*(.*?)\*\*LLM Response\*\*(.*?)(?=\*\*Tool Outputs\*\*|$)'
+
+    # --- Find all matches for the sections ---
+    matches = re.findall(sections_pattern, content, flags=re.DOTALL)
+
+    # --- Process each match to extract Tool Outputs and LLM Response content ---
+    results = []
+    for match in matches:
+        tool_outputs = "**Tool Outputs**\n" + match[0].strip()
+        llm_response = "**LLM Response**\n" + match[1].strip()
+
+        # --- Only keep the output with '----------' for evaluation ---
+        if '----------' not in tool_outputs:
+            continue  # Skip this pair
+
+        # --- Separate the Instruction and Tool Outputs ---
+        try:
+            parts = tool_outputs.split('----------', 1)
+            tool_outputs = parts[0].strip()
+        except Exception:
+            continue
+
+        # --- Determine the type based on the presence of 'Title' or 'title' ---
+        type_value = 'literature' if 'title:' in tool_outputs.lower() else 'values_and_recommendations'
         
-    return response.choices[0].message.content
+        # --- CRASH PROOFING & ROBUST MATCHING ---
+        # --- 1. Safely extract the first REAL sentence (skipping empty lines) ---
+        response_lines = llm_response.split('\n')
+        first_sentence = ""
+        
+        # --- Skip the first line (header) and find the first non-empty content line ---
+        for line in response_lines[1:]:
+            if line.strip():
+                first_sentence = line.strip()
+                break
+        
+        # --- 2. Safely find the match using normalized text ---
+        search_result = find_previous_user_query(interactions, first_sentence)
+        
+        # --- 3. Check if we found anything. If None, skip this entry.
+        if search_result is None:
+            # print(f"Skipping: Could not link response to chat history.")
+            continue
 
-def create_text_stream(text):
-    for word in text.split(" "):
-        yield word + " "
-        time.sleep(0.08)
+        # --- 4. Unpack safely ---
+        previous_query, current_entry = search_result
 
-def stream_static_text(text):
-    stream_text = create_text_stream(text)
-    st.write_stream(stream_text)
+        # --- Initialize dictionary for this pair ---
+        entry = {
+            'tool_outputs': tool_outputs,
+            'llm_response': llm_response,
+            'type': type_value,
+            'previous_query': previous_query,
+            'current_entry': current_entry
+        }
 
+        results.append(entry)
 
-def get_conversation_summary(messages, summary_instructions = "**Please summarize the previous conversation in a few sentences.**", max_tokens = 512):
-    """
-    This function returns a summary of the conversation by calling the API.
-    """
-
-    messages += [{"role": "system", "content": summary_instructions}]
-
-    response = get_openai_response(messages, max_tokens=max_tokens)
-
-    return response
+    return results
 
 
-def retry_on_generation_error(messages, response, possible_actions, exact_match = False):
-    """
-    This function retries the generation if the response is not in the list of possible actions.
-    """
-    if exact_match:
-        while response not in possible_actions:
-            # Increased temperature for retry variation
-            response = get_openai_response(messages, temperature = 1)
+def parse_user_profile(content):
+    # --- Initialize an empty dictionary ---
+    user_profile = {}
+
+    # --- Split the data into lines ---
+    lines = content.split("\n")
+
+    # --- Iterate over each line ---
+    for line in lines:
+        if ":" in line:  # --- Check if the line contains a key-value pair ---
+            # --- Split the line into key and value based on the first colon
+            key, value = line.split(":", 1)
+
+            # --- Clean up the key and value ---
+            key = key.strip().strip('*- ').replace("**", "").lower()  # Remove extra characters and make lowercase
+            value = value.replace("**", "").strip()
+
+            # --- Add the key-value pair to the dictionary ---
+            user_profile[key] = value
+
+    return user_profile
+
+def parse_current_entry(entry, aspect):
+    return_list = []
+    if aspect == 'relevance':
+        for key in range(1, 7):
+            if f"relevance_feedback_q{key}" in entry.keys():
+                return_list.append(entry[f"relevance_feedback_q{key}"])
+            else:
+                return_list.append('Not Applicable')
+    elif aspect == 'accessibility':
+        for key in range(1, 4):
+            if f"accessibility_feedback_q{key}" in entry.keys():
+                if key in [1, 3]:
+                    if entry[f"accessibility_feedback_q{key}"] == 'Yes':
+                        return_list.append('No')
+                    elif entry[f"accessibility_feedback_q{key}"] == 'No':
+                        return_list.append('Yes')
+                    else:
+                        return_list.append(entry[f"accessibility_feedback_q{key}"])
+                else:
+                    return_list.append(entry[f"accessibility_feedback_q{key}"])
+            else:
+                return_list.append('Not Applicable')
+    elif aspect == 'entailment':
+        for key in range(1, 2):
+            if f"entailment_feedback_q{key}" in entry.keys():
+                return_list.append(entry[f"entailment_feedback_q{key}"])
+            else:
+                return_list.append('Not Applicable')
+    
+    return return_list
+            
+
+
+def convert_scores(input_score, aspect):
+    # --- CLOUD/LLAMA-3: CLEAN MARKDOWN ---
+    # --- Llama-3 often wraps output in ```python ... ``` ---
+    input_score = re.sub(r"```python", "", input_score)
+    input_score = re.sub(r"```", "", input_score).strip()
+    # ---------------------------------------------
+
+    # --- Regular expression to match all reasoning blocks ---
+    print(f"{PURPLE}response{ENDC}", input_score)
+    reasonings = re.findall(r'\(\d+\)\s+(.*?)\n\n', input_score, re.DOTALL)
+
+    # --- Fallback: if regex finds nothing (e.g. Llama-3 wrote an essay), use the whole text as reasoning ---
+    if not reasonings:
+        reasonings = [str(input_score)]
+
+    # --- Check if input_score is a string that contains a list or tuple structure ---
+    if isinstance(input_score, str) and ("[" in input_score or "(" in input_score):
+        # --- Clean up string if necessary ---
+        if "[" in input_score and "]" in input_score:
+            input_score = input_score[input_score.index("["):input_score.rindex("]") + 1]
+        
+        try:
+            # --- Try to convert the input string to a list/tuple directly ---
+            input_score = ast.literal_eval(input_score)
+        except (ValueError, SyntaxError):
+            # --- Fallback formatting ---
+            input_score = re.sub(r"(?<=\[|\s|,)([^\\d\\[\\]'\"].*?)(?=,|\])", r"'\1'", input_score)
+            try:
+                input_score = ast.literal_eval(input_score)
+            except (ValueError, SyntaxError) as e:
+                print(f"Error in converting input_score: {e}")
+                # --- CRITICAL FIX: Return a tuple (list, string) to prevent crash ---
+                # --- Return a list of "Error" so the UI displays it safely ---
+                return ["Error Parsing"], str(input_score)
+
+    # --- CRITICAL FIX START ---
+    # --- If it is a tuple, convert it to a list so we can modify it later ---
+    if isinstance(input_score, tuple):
+        input_score = list(input_score)
+
+    # --- print the type of input_score to debug ---
+    print(f"{PURPLE}input_score{ENDC}", input_score)
+
+    if aspect in ['correctness']:
+        scores = re.findall(r"(\d+)/(\d+)", str(input_score))
+        if len(scores) > 0:
+            matches, total = map(int, scores[0])
+        else:
+            matches = total = 0
+        return matches, reasonings, total, 0, input_score
+
     else:
-        while not any([action in response for action in possible_actions]):
-            response = get_openai_response(messages, temperature = 1)
-    return response
+        # --- 1. Handle Accessibility logic ---
+        if isinstance(input_score, list) and len(input_score) == 3:
+            for i in [0, 2]:
+                input_score[i] = 'No' if input_score[i] == 'Yes' else 'Yes'
 
-
-def get_openai_response_with_retries(messages, possible_actions, top_p = 0.95, max_tokens = 256, temperature = 0.7, exact_match = False):
-    response = get_openai_response(messages, top_p = top_p, max_tokens = max_tokens, temperature = temperature)
-    return retry_on_generation_error(messages, response, possible_actions, exact_match = exact_match)
-
+        # --- 2. Handle Single Item List ---
+        if isinstance(input_score, list) and len(input_score) == 1:
+            input_score = input_score[0]
+            
+        return input_score, reasonings
+    
+if __name__ == '__main__':
+    print(convert_scores("Yes, 0/8", "correctness"))
 
 

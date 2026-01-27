@@ -108,8 +108,8 @@ def render_admin_dashboard():
     # --- TAB 2: SYSTEM EVALUATION ---
     # =================================
     with tab2:
-        st.subheader("Offline Evaluation Pipeline")
-        st.info("This tool runs the `eval_offline.py` script on a specific user's interaction history.")
+        st.subheader("Evaluation for AI Conversation Quality of WildfireGPT")
+        st.info("This tool runs the evaluation script on a specific user's interaction history.")
 
         # --- 1. Select User Case ---
         case_root = os.path.abspath("cases") # --- Force Absolute Path ---
