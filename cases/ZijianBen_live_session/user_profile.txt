@@ -1,5 +1,0 @@
-Profession: Emergency Manager
-Concern: wildfire safety
-Location: CA
-Time: current
-Scope: regional

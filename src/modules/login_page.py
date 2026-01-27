@@ -1,44 +1,51 @@
 import streamlit as st
 import modules.auth as auth
+import modules.register_page as register_page
+import modules.password_forgotten as password_forgotten
 
 def render_login_page():
     """
-    Renders the Login and Register tabs.
-    Handles user authentication and new account creation.
+    Main Entry point for Authentication.
+    Routes to Login, Register, or Forgot Password pages.
     """
-    st.markdown("### Please log in to access your workspace")
     
-    tab1, tab2 = st.tabs(["Login", "Register"])
+    # --- Initialize Navigation State ---
+    if 'auth_mode' not in st.session_state:
+        st.session_state.auth_mode = 'login' # --- Options: 'login', 'register', 'forgot_password' ---
 
-    # --- TAB 1: LOGIN ---
-    with tab1:
-        username = st.text_input("Username", key="login_user")
-        password = st.text_input("Password", type="password", key="login_pass")
-        if st.button("Log In"):
-            if auth.verify_login(username, password):
-                st.session_state.logged_in = True
-                st.session_state.username = username
-                st.rerun()
-            else:
-                st.error("Incorrect username or password")
-
-    # --- TAB 2: REGISTER ---
-    with tab2:
-        new_user = st.text_input("New Username", key="reg_user")
-        new_pass = st.text_input("New Password", type="password", key="reg_pass")
+    # --- ROUTING ---
+    if st.session_state.auth_mode == 'register':
+        register_page.render_register_page()
         
-        if st.button("Create Account"):
-            # --- 1. Validate Username Format ---
-            if not auth.validate_username(new_user):
-                st.error("❌ Username can only contain letters and numbers (no special characters).")
+    elif st.session_state.auth_mode == 'forgot_password':
+        password_forgotten.render_forgot_password_page()
+        
+    else:
+        # --- DEFAULT: LOGIN FORM ---
+        st.markdown("### Please log in to access your workspace")
+        
+        # --- We use a container to keep it neat ---
+        with st.container():
+            username = st.text_input("Username", key="login_user")
+            password = st.text_input("Password", type="password", key="login_pass")
             
-            # --- 2. Validate Password Strength ---
-            elif not auth.validate_password(new_pass):
-                st.error("❌ Password must be at least 6 characters long and contain at least one letter.")
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                if st.button("Log In", type="primary", use_container_width=True):
+                    if auth.verify_login(username, password):
+                        st.session_state.logged_in = True
+                        st.session_state.username = username
+                        st.rerun()
+                    else:
+                        st.error("Incorrect username or password")
             
-            # --- 3. Save User ---
-            else:
-                if auth.save_user(new_user, new_pass):
-                    st.success("✅ Account created! Please log in.")
-                else:
-                    st.error("Username already exists.")
+            with col2:
+                 if st.button("Forgot Password?", type="secondary", use_container_width=True):
+                    st.session_state.auth_mode = 'forgot_password'
+                    st.rerun()
+
+        st.markdown("---")
+        st.markdown("Don't have an account?")
+        if st.button("Create New Account"):
+            st.session_state.auth_mode = 'register'
+            st.rerun()

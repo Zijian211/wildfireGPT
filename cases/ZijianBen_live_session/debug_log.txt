@@ -1,0 +1,4 @@
+Evaluator initialized for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen_live_session
+Loaded 7 interaction lines.
+Parsed 0 entries from tools.txt.
+WARNING: self.data_dict is empty. Writing empty CSV.
