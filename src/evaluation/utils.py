@@ -170,9 +170,19 @@ def parse_current_entry(entry, aspect):
 
 
 def convert_scores(input_score, aspect):
+    # --- FIX FOR CLOUD/LLAMA-3: CLEAN MARKDOWN ---
+    # Llama-3 often wraps output in ```python ... ```
+    input_score = re.sub(r"```python", "", input_score)
+    input_score = re.sub(r"```", "", input_score).strip()
+    # ---------------------------------------------
+
     # Regular expression to match all reasoning blocks
     print(f"{PURPLE}response{ENDC}", input_score)
     reasonings = re.findall(r'\(\d+\)\s+(.*?)\n\n', input_score, re.DOTALL)
+    
+    # Fallback: if regex finds nothing (e.g. Llama-3 wrote an essay), use the whole text as reasoning
+    if not reasonings:
+        reasonings = [str(input_score)]
 
     # Check if input_score is a string that contains a list or tuple structure
     if isinstance(input_score, str) and ("[" in input_score or "(" in input_score):
@@ -185,12 +195,14 @@ def convert_scores(input_score, aspect):
             input_score = ast.literal_eval(input_score)
         except (ValueError, SyntaxError):
             # Fallback formatting
-            input_score = re.sub(r"(?<=\[|\s|,)([^\d\[\]'\"].*?)(?=,|\])", r"'\1'", input_score)
+            input_score = re.sub(r"(?<=\[|\s|,)([^\\d\\[\\]'\"].*?)(?=,|\])", r"'\1'", input_score)
             try:
                 input_score = ast.literal_eval(input_score)
             except (ValueError, SyntaxError) as e:
                 print(f"Error in converting input_score: {e}")
-                return input_score
+                # --- CRITICAL FIX: Return a tuple (list, string) to prevent crash ---
+                # We return a list of "Error" so the UI displays it safely
+                return ["Error Parsing"], str(input_score)
 
     # --- CRITICAL FIX START ---
     # If it is a tuple, convert it to a list so we can modify it later
@@ -222,4 +234,4 @@ def convert_scores(input_score, aspect):
         return input_score, reasonings
     
 if __name__ == '__main__':
-    print(convert_scores("Yes, 0/8"))
+    print(convert_scores("Yes, 0/8", "correctness"))

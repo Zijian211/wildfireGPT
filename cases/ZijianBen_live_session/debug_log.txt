@@ -2,3 +2,10 @@ Evaluator initialized for: E:\华子健 it master\Interview and Internship\Pract
 Loaded 7 interaction lines.
 Parsed 0 entries from tools.txt.
 WARNING: self.data_dict is empty. Writing empty CSV.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen_live_session
+Loaded 11 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 6 evaluation items from Chat History.
+Starting llm_evaluate loop...
+Evaluation finished successfully.
