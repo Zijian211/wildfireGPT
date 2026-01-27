@@ -5,3 +5,94 @@ Tools data empty. Falling back to Chat History parsing.
 Generated 2 evaluation items from Chat History.
 Starting llm_evaluate loop...
 Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Unknown
+Location: Sydney, NSW, Australia
+Conc...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Unknown
+Location: Sydney, NSW, Australia
+Conc...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Unknown
+Location: Sydney, NSW, Australia
+Conc...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Unknown
+Location: Sydney, NSW, Australia
+Conc...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Unknown
+Location: Sydney, NSW, Australia
+Conc...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Unknown
+Location: Sydney, NSW, Australia
+Conc...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Unknown
+Location: Sydney, NSW, Australia
+Conc...
+Starting llm_evaluate loop...
+Evaluation finished successfully.

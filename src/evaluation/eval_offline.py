@@ -38,7 +38,14 @@ class Evaluator:
     def __init__(self, args: Dict[str, Any]):
         self.args = args
         self.prompts = Prompts()
-        self.case = args.get('case_folder')
+        
+        # ---Normalize path for Windows Localhost ---
+        raw_case = args.get('case_folder')
+        # This combines mixed slashes in Cloud/Localhost paths
+        if raw_case:
+            self.case = os.path.normpath(raw_case) 
+        else:
+            self.case = raw_case
         self.debug_path = os.path.join(self.case, "debug_log.txt")
         
         # --- Model Configuration ---

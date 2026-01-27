@@ -1,0 +1,12 @@
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\HZJ_live_session
+Loaded 9 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 5 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: ZJ
+Location: Sydney, New South Wales, Austral...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
