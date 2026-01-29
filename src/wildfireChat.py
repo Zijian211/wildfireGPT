@@ -3,6 +3,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# --- Local Imports ---
 from src.assistants.assistant_router import AssistantRouter
 import streamlit as st
 import clipboard
@@ -13,7 +14,9 @@ from streamlit_folium import st_folium
 import pickle
 from src.utils import stream_static_text
 from src.modules import auth as auth, sidebar as sidebar, login_page as login, admin_page as admin
+from src.modules.voice_manager import VoiceManager
 
+# --- APP TITLE ---
 st.title("Wildfire GPT")
 
 # --- AUTH STATE INITIALIZATION ---
@@ -122,6 +125,7 @@ elif auth.is_admin(st.session_state.username):
 # --- Login for Regular User Flow ---
 else:    
     # --- RENDER SIDEBAR FROM EXTERNAL MODULE ---
+    # This handles the File Uploader UI and sets st.session_state['pending_file_context']
     sidebar.render_sidebar()
 
     # --- Define User-Specific File Paths ---
@@ -132,7 +136,7 @@ else:
     user_profile_path = f"chat_history/{st.session_state.username}_profile.txt"
     if not os.path.exists(user_profile_path):
         with open(user_profile_path, "w") as f:
-            # --- I make this dynamic later based on login settings ---
+            # --- Make this dynamic later based on login settings ---
             f.write("Profession: Emergency Manager\nConcern: Fire Safety\nLocation: CA\nTime: Now\nScope: Local")
 
     if "messages" not in st.session_state:
@@ -224,19 +228,44 @@ else:
             st.rerun()
 
 
-    elif user_prompt := st.chat_input("Ask me anything?"):
-        if user_prompt.lower() == 'resume conversation':
-            st.session_state.assistant.resume_conversation()
-            user_prompt = None
-            if len(st.session_state.messages) > 0 and st.session_state.messages[-1]['role'] == 'assistant':
-                st.session_state.messages.pop(-1)
-        else:
-            with st.chat_message("user"):
-                st.markdown(user_prompt)
-            st.session_state.messages.append({"role": "user", "content": user_prompt})
+    # --- UPGRADED INPUT SECTION (Voice + File + Text) ---
+    else:
+        # --- 1. VOICE INPUT ---
+        voice_text = VoiceManager.record_and_transcribe()
+        if voice_text:
+            st.toast(f"🗣️ Heard: {voice_text}")
 
-        with st.chat_message("assistant"):
-            full_response = st.session_state.assistant.get_assistant_response(user_prompt)
-        
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
-        st.rerun()
+        # --- 2. TEXT INPUT ---
+        text_input = st.chat_input("Ask me anything?")
+
+        # --- 3. DETERMINE PROMPT (Voice takes priority if active) ---
+        user_prompt = voice_text if voice_text else text_input
+
+        if user_prompt:
+            if user_prompt.lower() == 'resume conversation':
+                st.session_state.assistant.resume_conversation()
+                user_prompt = None
+                if len(st.session_state.messages) > 0 and st.session_state.messages[-1]['role'] == 'assistant':
+                    st.session_state.messages.pop(-1)
+                st.rerun()
+            else:
+                # --- CHECK FOR FILE CONTEXT FROM SIDEBAR ---
+                final_prompt_to_model = user_prompt
+                
+                # --- If sidebar processing put a file context in session state, prepend it invisibly ---
+                if st.session_state.get('pending_file_context'):
+                    final_prompt_to_model = f"{st.session_state['pending_file_context']}\n\nUser Question: {user_prompt}"
+
+                # --- Display ONLY the user's question (UI Cleanliness) ---
+                with st.chat_message("user"):
+                    st.markdown(user_prompt)
+                    if st.session_state.get('pending_file_context'):
+                         st.caption(f"📎 Context attached: {st.session_state.get('last_uploaded_filename', 'File')}")
+
+                st.session_state.messages.append({"role": "user", "content": final_prompt_to_model})
+
+                with st.chat_message("assistant"):
+                    full_response = st.session_state.assistant.get_assistant_response(final_prompt_to_model)
+                
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+                st.rerun()

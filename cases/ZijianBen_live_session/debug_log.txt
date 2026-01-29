@@ -82,3 +82,42 @@ Location: Shanghai, China
 Concern: Wildfi...
 Starting llm_evaluate loop...
 Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Ben
+Location: Shanghai, China
+Concern: Wildfi...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen_live_session
+Loaded 20 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 10 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Ben
+Location: Shanghai, China
+Concern: Unknow...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen_live_session
+Loaded 22 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 11 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Error inferring profile: Error code: 400 - {'error': 'Trying to keep the first 5899 tokens when context the overflows. However, the model is loaded with context length of only 4096 tokens, which is not enough. Try to load the model with a larger context length, or provide a shorter input'}
+Active User Profile: Name: Unknown
+Location: Unknown...
+Starting llm_evaluate loop...
+API Error: Error code: 400 - {'error': 'Trying to keep the first 4788 tokens when context the overflows. However, the model is loaded with context length of only 4096 tokens, which is not enough. Try to load the model with a larger context length, or provide a shorter input'}
+Failed to get response for relevance on turn 10
+Evaluation finished successfully.

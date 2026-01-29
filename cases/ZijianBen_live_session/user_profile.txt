@@ -1,7 +1,2 @@
-Here is the extracted user profile information:
-
-Name: Ben
-Location: Shanghai, China
-Concern: Wildfire risks and potential impact on property, community, or environment
-Timeline: Unknown (not specified)
-Profession: Unknown (not specified)
+Name: Unknown
+Location: Unknown

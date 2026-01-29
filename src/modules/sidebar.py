@@ -1,19 +1,20 @@
 import streamlit as st
 import modules.auth as auth
 import modules.report_generator as report
+from src.modules.file_manager import FileManager
 
+# --- Renders the User Management Sidebar ---
 def render_sidebar():
-    # --- Renders the User Management Sidebar (Account Settings, Danger Zone, Logout). ---
-    # --- Sidebar for User Management ---
+    # --- Sidebar for User for Account Settings, Files Management ---
     with st.sidebar:
         st.write(f"👤 **Logged in as:** {st.session_state.username}")
         
-        # --- SECURE CHANGE PASSWORD MODULE ---
+        # --- 1. SECURE CHANGE PASSWORD MODULE ---
         with st.expander("🔐 Password Changing"):
-            # --- 1. Ask for Current Password ---
+            # --- Ask for Current Password ---
             current_password_input = st.text_input("Current Password", type="password", key="curr_pass_input")
             
-            # --- 2. Ask for New Password ---
+            # --- Ask for New Password ---
             new_password_input = st.text_input("New Password", type="password", key="new_pass_input")
             confirm_password = st.text_input("Confirm New Password", type="password", key="conf_pass_input")
             
@@ -22,11 +23,11 @@ def render_sidebar():
                 if not auth.verify_login(st.session_state.username, current_password_input):
                     st.error("❌ Current password is incorrect. Cannot update.")
                 
-                # --- Validation Step: Check if new passwords match ---
+                # --- Match Validation Step: Check if new passwords match ---
                 elif new_password_input != confirm_password:
                     st.error("⚠️ New passwords do not match.")
                 
-                # --- NEW: Validation Step: Check Password Rules ---
+                # --- Rules Validation Step: Check Password Rules ---
                 elif not auth.validate_password(new_password_input):
                     st.error("❌ Password must be at least 6 characters long and contain at least one letter.")
                 
@@ -37,7 +38,7 @@ def render_sidebar():
                     else:
                         st.error("Error updating password.")
 
-        # --- DANGER ZONE: DELETE ACCOUNT ---
+        # --- 2. DANGER ZONE: DELETE ACCOUNT ---
         with st.expander("🚨 Warning: Delete Account in this Tab"):
             st.warning("This action is permanent. All chat history will be lost.")
             
@@ -67,8 +68,34 @@ def render_sidebar():
                         st.error("❌ Incorrect password. Deletion cancelled.")
 
         st.markdown("---")
+
+        # --- 3. FILE User's Documents Managements ---
+        st.markdown("### 📂 Upload files/Generate PDF Report")
+        # --- 3.1 FILE UPLOAD SECTION: Supported: PDF, DOCX, CSV ---
+        uploaded_file = st.file_uploader(
+            "Attach a file (PDF, DOCX, CSV)", 
+            type=['pdf', 'docx', 'csv', 'txt'],
+            label_visibility="collapsed"
+        )
+        
+        
+        if uploaded_file: # --- If a file is uploaded, process it and save to session_state ---
+            # --- Avoid re-processing if it's the same file we already have ---
+            if st.session_state.get('last_uploaded_filename') != uploaded_file.name:
+                with st.spinner("Processing file..."):
+                    file_text = FileManager.process_file(uploaded_file)
+                    st.session_state['pending_file_context'] = file_text
+                    st.session_state['last_uploaded_filename'] = uploaded_file.name
+                st.success(f"Attached: {uploaded_file.name}")
+            else:
+                # --- Provide visual feedback that file is ready ---
+                st.info(f"Ready: {uploaded_file.name}")
+        else:
+            # --- Clear context if user removes the file ---
+            st.session_state['pending_file_context'] = None
+            st.session_state['last_uploaded_filename'] = None
     
-        # --- REPORT GENERATION: ONLY SHOW IF MESSAGES EXIST ---
+        # --- 3.2 REPORT GENERATION: ONLY SHOW IF MESSAGES EXIST ---
         if "messages" in st.session_state and len(st.session_state.messages) > 0:
             if st.button("Generate PDF Report"):
                 try:
@@ -90,7 +117,9 @@ def render_sidebar():
         else:
             st.info("Start a conversation to generate a report.")
 
-        # --- LOGOUT BUTTON: BACK TO LOGIN PAGE ---
+        st.markdown("---")
+
+        # --- 4. LOGOUT BUTTON: BACK TO LOGIN PAGE ---
         if st.button("Log Out"):
             st.session_state.logged_in = False
             st.session_state.username = ""

@@ -96,3 +96,39 @@ Location: Sydney, NSW, Australia
 Conc...
 Starting llm_evaluate loop...
 Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Error inferring profile: Connection error.
+Active User Profile: Name: Unknown
+Location: Unknown...
+Starting llm_evaluate loop...
+API Error: Connection error.
+Failed to get response for relevance on turn 0
+API Error: Connection error.
+Failed to get response for entailment on turn 0
+API Error: Connection error.
+Failed to get response for accessibility on turn 0
+API Error: Connection error.
+Failed to get response for relevance on turn 1
+API Error: Connection error.
+Failed to get response for entailment on turn 1
+API Error: Connection error.
+Failed to get response for accessibility on turn 1
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\ZijianBen1_live_session
+Loaded 3 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 2 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Active User Profile: Here is the extracted user profile information:
+
+Name: Unknown
+Location: Sydney, NSW, Australia
+Conc...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
