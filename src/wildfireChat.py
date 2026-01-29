@@ -6,7 +6,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # --- Local Imports ---
 from src.assistants.assistant_router import AssistantRouter
 import streamlit as st
-import clipboard
 import json
 from src.assistants.analyst.utils import display_maps, display_plots
 import folium
