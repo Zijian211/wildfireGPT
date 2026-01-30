@@ -18,8 +18,9 @@ class InputBox:
     @staticmethod
     def render():
         """
-        Renders input. If an error occurs, it RAISES the exception
-        so the Debug Doctor in the main app can catch it.
+        Renders input. 
+        CRITICAL: This function does NOT catch API errors. 
+        It lets them crash so 'wildfireChat.py' can diagnose them with the Doctor.
         """
         voice_text = None
         
@@ -36,8 +37,7 @@ class InputBox:
         
         # --- Process Audio ---
         if audio:
-            
-            # --- 1. Convert ---
+            # --- 1. Convert bytes to audio source ---
             audio_bytes = audio['bytes']
             sound = AudioSegment.from_file(io.BytesIO(audio_bytes))
             
@@ -46,16 +46,16 @@ class InputBox:
                 st.toast("⚠️ Audio too quiet. Please speak up!", icon="🔇")
                 return None
 
-            # --- 3. Export ---
+            # --- 3. Export to a memory buffer as WAV ---
             wav_buffer = io.BytesIO()
             sound.export(wav_buffer, format="wav")
             wav_buffer.seek(0)
             
             # --- 4. Transcribe ---
+            # --- If API fails (connection/limit), it will crash upwards to the Doctor ---
             r = sr.Recognizer()
             with sr.AudioFile(wav_buffer) as source:
                 audio_data = r.record(source)
-                # This line will CRASH if API fails -> Doctor will catch it now!
                 voice_text = r.recognize_google(audio_data)
 
         # --- 2. TEXT INPUT ---

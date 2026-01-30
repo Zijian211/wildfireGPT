@@ -23,17 +23,46 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.username = ""
 
-# --- DEBUG DOCTOR (Added as requested) ---
+# --- DEBUG DOCTOR (Added for API Diagnosis) ---
 def debug_doctor(e):
     """
-    Catches API errors and displays a diagnosis.
+    Catches API errors and displays a detailed diagnosis.
+    Targeting: Rate Limits (429), Quotas, and Voice Connection.
     """
+    error_msg = str(e)
     with st.expander("🚑 Debug Doctor (Error Diagnosis)", expanded=True):
-        st.error(f"An error occurred: {e}")
-        st.markdown("### Diagnosis:")
-        st.info("This is likely a connection issue or an API Key limit.")
-        st.markdown("- **If Voice Failed:** Check your microphone permissions or silence.")
-        st.markdown("- **If Chat Failed:** Check your OpenAI API Key and internet connection.")
+        st.error(f"System Error: {error_msg}")
+        st.markdown("### 🩺 Diagnosis:")
+        
+        # --- CASE 1: API RATE LIMITS (The #1 Suspect) ---
+        if "429" in error_msg or "RateLimit" in error_msg or "quota" in error_msg or "insufficient_quota" in error_msg:
+            st.warning("📉 **API RATE LIMIT / QUOTA REACHED**")
+            st.markdown("""
+            **What happened?**
+            The AI Service (OpenAI or Groq) refused the request because you have hit a limit.
+            
+            **Possible Causes:**
+            1. **Free Tier Limit:** You are sending too many messages too fast.
+            2. **Daily Quota:** The free credit for the day is exhausted.
+            3. **Expired Key:** The API key might be invalid or out of credits.
+            
+            **Solution:** Wait a few minutes or check your API provider dashboard.
+            """)
+            
+        # --- CASE 2: VOICE API FAILURE ---
+        elif "recognition connection" in error_msg or "speech" in error_msg or "connection failed" in error_msg:
+            st.info("🎤 **Voice Recognition API Failed**")
+            st.markdown("""
+            **What happened?**
+            Google Speech Recognition could not connect or failed to understand.
+            
+            **Solution:** Check internet connection or try typing instead.
+            """)
+            
+        # --- CASE 3: GENERAL CONNECTION ---
+        else:
+            st.info("🔌 **General Connection or Logic Error**")
+            st.markdown("Please check your internet connection and try again.")
 
 def display_feedback(message, index, file):
     increment = 0
@@ -136,6 +165,7 @@ elif auth.is_admin(st.session_state.username):
 # --- Login for Regular User Flow ---
 else:    
     # --- RENDER SIDEBAR FROM EXTERNAL MODULE ---
+    # --- This handles the File Uploader UI and sets st.session_state['pending_file_context'] ---
     sidebar.render_sidebar()
 
     # --- Define User-Specific File Paths ---
@@ -238,10 +268,11 @@ else:
             st.rerun()
 
 
-    # --- UPGRADED INPUT SECTION (Voice + File + Text) ---
+    # --- INPUT SECTION (With Debug Doctor for Voice & Text) ---
     else:
         # --- 1. GET INPUT (Wrapped in Doctor) ---
         try:
+            # --- If Voice API fails here, it crashes to the 'except' block below ---
             user_prompt = InputBox.render()
         except Exception as e:
             debug_doctor(e)
@@ -272,13 +303,13 @@ else:
                 st.session_state.messages.append({"role": "user", "content": final_prompt_to_model})
 
                 with st.chat_message("assistant"):
-                    # --- WRAPPED IN DEBUG DOCTOR ---
+                    # --- WRAPPED IN DEBUG DOCTOR (Catches API Limits) ---
                     try:
                         full_response = st.session_state.assistant.get_assistant_response(final_prompt_to_model)
                     except Exception as e:
                         debug_doctor(e)
                         st.stop()
-                    # -------------------------------
+                    # ---------------------------------------------------
                 
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.rerun()
