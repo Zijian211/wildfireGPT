@@ -12,15 +12,17 @@ local_ffprobe = r"E:\ffmpeg\ffmpeg\bin\ffprobe.exe"
 if os.path.exists(local_ffmpeg):
     AudioSegment.converter = local_ffmpeg
     AudioSegment.ffprobe = local_ffprobe
-# -----------------------------
+    print(f"✅ Local Mode: Using FFmpeg at {local_ffmpeg}")
+else:
+    print("☁️ Cloud Mode: Using system default FFmpeg")
 
+# --- INPUT BOX CLASS ---
 class InputBox:
     @staticmethod
     def render():
         """
-        Renders input. 
-        CRITICAL: This function does NOT catch API errors. 
-        It lets them crash so 'wildfireChat.py' can diagnose them with the Doctor.
+        Renders the Voice and Text input widgets.
+        Returns the text string entered by the user (or transcribed from voice).
         """
         voice_text = None
         
@@ -35,35 +37,31 @@ class InputBox:
                 use_container_width=False
             )
         
-        # --- Process Audio ---
+        # --- Process Audio if recorded ---
         if audio:
-            # --- 1. Convert bytes to audio source ---
-            audio_bytes = audio['bytes']
-            sound = AudioSegment.from_file(io.BytesIO(audio_bytes))
-            
-            # --- 2. Silence Check (Prevents API errors from quiet mics) ---
-            if sound.dBFS < -50:
-                st.toast("⚠️ Audio too quiet. Please speak up!", icon="🔇")
-                return None
-
-            # --- 3. Export to a memory buffer as WAV ---
-            wav_buffer = io.BytesIO()
-            sound.export(wav_buffer, format="wav")
-            wav_buffer.seek(0)
-            
-            # --- 4. Transcribe ---
-            # --- If API fails (connection/limit), it will crash upwards to the Doctor ---
-            r = sr.Recognizer()
-            with sr.AudioFile(wav_buffer) as source:
-                audio_data = r.record(source)
-                voice_text = r.recognize_google(audio_data)
+            try:
+                # --- 1. Get raw bytes from browser ---
+                audio_bytes = audio['bytes']
+                
+                # --- 2. Convert to WAV using pydub ---
+                sound = AudioSegment.from_file(io.BytesIO(audio_bytes))
+                
+                # --- 3. Export to a memory buffer as WAV ---
+                wav_buffer = io.BytesIO()
+                sound.export(wav_buffer, format="wav")
+                wav_buffer.seek(0)
+                
+                # --- 4. Transcribe ---
+                r = sr.Recognizer()
+                with sr.AudioFile(wav_buffer) as source:
+                    audio_data = r.record(source)
+                    voice_text = r.recognize_google(audio_data)
+                    
+            except Exception as e:
+                st.warning(f"Audio processing error: {e}")
 
         # --- 2. TEXT INPUT ---
-        text_input = st.chat_input("Ask me anything?", key="main_chat_input")
+        text_input = st.chat_input("Ask me anything?")
 
-        if voice_text:
-            return voice_text
-        elif text_input:
-            return text_input
-        
-        return None
+        # --- 3. RETURN RESULT ---
+        return voice_text if voice_text else text_input
