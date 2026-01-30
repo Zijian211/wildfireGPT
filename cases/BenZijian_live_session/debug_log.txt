@@ -1,0 +1,11 @@
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\BenZijian_live_session
+Loaded 27 interaction lines.
+Tools data empty. Falling back to Chat History parsing.
+Generated 14 evaluation items from Chat History.
+Generating User Profile from Chat History...
+Error inferring profile: Error code: 400 - {'error': 'Trying to keep the first 4563 tokens when context the overflows. However, the model is loaded with context length of only 4096 tokens, which is not enough. Try to load the model with a larger context length, or provide a shorter input'}
+Active User Profile: Name: Unknown
+Location: Unknown...
+Starting llm_evaluate loop...
+Evaluation finished successfully.

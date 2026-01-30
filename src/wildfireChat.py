@@ -13,7 +13,7 @@ from streamlit_folium import st_folium
 import pickle
 from src.utils import stream_static_text
 from src.modules import auth as auth, sidebar as sidebar, login_page as login, admin_page as admin
-from src.modules.voice_manager import VoiceManager
+from src.modules.input_box import InputBox
 
 # --- APP TITLE ---
 st.title("Wildfire GPT")
@@ -229,17 +229,10 @@ else:
 
     # --- UPGRADED INPUT SECTION (Voice + File + Text) ---
     else:
-        # --- 1. VOICE INPUT ---
-        voice_text = VoiceManager.record_and_transcribe()
-        if voice_text:
-            st.toast(f"🗣️ Heard: {voice_text}")
+        # --- 1. GET INPUT (Voice or Text) ---
+        user_prompt = InputBox.render()
 
-        # --- 2. TEXT INPUT ---
-        text_input = st.chat_input("Ask me anything?")
-
-        # --- 3. DETERMINE PROMPT (Voice takes priority if active) ---
-        user_prompt = voice_text if voice_text else text_input
-
+        # --- 2. PROCESS INPUT ---
         if user_prompt:
             if user_prompt.lower() == 'resume conversation':
                 st.session_state.assistant.resume_conversation()
