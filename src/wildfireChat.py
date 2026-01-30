@@ -23,6 +23,18 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.username = ""
 
+# --- DEBUG DOCTOR (Added as requested) ---
+def debug_doctor(e):
+    """
+    Catches API errors and displays a diagnosis.
+    """
+    with st.expander("🚑 Debug Doctor (Error Diagnosis)", expanded=True):
+        st.error(f"An error occurred: {e}")
+        st.markdown("### Diagnosis:")
+        st.info("This is likely a connection issue or an API Key limit.")
+        st.markdown("- **If Voice Failed:** Check your microphone permissions or silence.")
+        st.markdown("- **If Chat Failed:** Check your OpenAI API Key and internet connection.")
+
 def display_feedback(message, index, file):
     increment = 0
     if message["role"] == "assistant":
