@@ -23,7 +23,7 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.username = ""
 
-# --- DEBUG DOCTOR (Added for API Diagnosis) ---
+# --- DEBUG DOCTOR (API Diagnosis) ---
 def debug_doctor(e):
     """
     Catches API errors and displays a detailed diagnosis.
@@ -34,7 +34,7 @@ def debug_doctor(e):
         st.error(f"System Error: {error_msg}")
         st.markdown("### 🩺 Diagnosis:")
         
-        # --- CASE 1: API RATE LIMITS (The #1 Suspect) ---
+        # --- CASE 1: API RATE LIMITS ---
         if "429" in error_msg or "RateLimit" in error_msg or "quota" in error_msg or "insufficient_quota" in error_msg:
             st.warning("📉 **API RATE LIMIT / QUOTA REACHED**")
             st.markdown("""
@@ -80,7 +80,6 @@ def display_feedback(message, index, file):
                 if feedback == "Relevance":
                     with st.form(f"Relevance Feedback {index}"):
                         st.write("Relevance Feedback")
-                        # --- Multiple choice question under Relevance ---
                         q1 = st.radio("Does my response answer your last question?", ["Yes", "No", "Could be better", "Not Applicable"])
                         q2 = st.radio("Is my response relevant to your profession?", ["Yes", "No", "Could be better", "Not Applicable"])
                         q3 = st.radio("Is my response relevant to your concern?", ["Yes", "No", "Could be better", "Not Applicable"])
@@ -88,7 +87,6 @@ def display_feedback(message, index, file):
                         q5 = st.radio("Is my response relevant to the timeline?", ["Yes", "No", "Could be better", "Not Applicable"])
                         q6 = st.radio("Is my response relevant to the scope?", ["Yes", "No", "Could be better", "Not Applicable"])
 
-                        # --- Form submit button ---
                         submitted = st.form_submit_button("Submit")
                         if submitted:
                             st.write("Feedback submitted!")
@@ -102,10 +100,7 @@ def display_feedback(message, index, file):
                 if feedback == "Entailment":
                     with st.form(f"Entailment Feedback {index}"):
                         st.write("Entailment Feedback")
-                        # --- Multiple choice question under Entailment ---
                         q1 = st.radio("Do my analyses or recommendations logically follow from the information (data, literature) provided?", ["Yes", "No", "Could be better", "Not Applicable"])
-
-                        # --- Form submit button ---
                         submitted = st.form_submit_button("Submit")
                         if submitted:
                             st.write("Feedback submitted!")
@@ -114,12 +109,9 @@ def display_feedback(message, index, file):
                 if feedback == "Accessibility":
                     with st.form(f"Accessibility Feedback {index}"):
                         st.write("Accessibility Feedback")
-                        # --- Multiple choice question under Accessibility ---
                         q1 = st.radio("Does my response contain too many jargons?", ["Yes", "No", "Could be better", "Not Applicable"])
                         q2 = st.radio("Does my response provide enough explanation?", ["Yes", "No", "Could be better", "Not Applicable"])
                         q3 = st.radio("Does my response contain redundant or useless information?", ["Yes", "No", "Could be better", "Not Applicable"])
-
-                        # --- Form submit button ---
                         submitted = st.form_submit_button("Submit")
                         if submitted:
                             st.write("Feedback submitted!")
@@ -135,7 +127,6 @@ def display_feedback(message, index, file):
 
     message_save = {k: v for k, v in message.items() if k != "content"}
     message_save["content"] = message["content"] if type(message["content"]) == str else message["content"][0]
-    # --- json.dump(message_save, file, indent=4) ---
     file.write(json.dumps(message_save) + "\n")
     file.flush()
     return increment
@@ -155,20 +146,16 @@ def display_reponse(message, index=0, file=None):
 
 # --- LOGIN / REGISTER LOGIC ---
 if not st.session_state.logged_in:
-    # --- RENDER LOGIN PAGE FROM EXTERNAL MODULE ---
     login.render_login_page()
 
 # --- Login for Administrator ---
 elif auth.is_admin(st.session_state.username):
-    # --- RENDER ADMIN DASHBOARD ---
     admin.render_admin_dashboard()
+
 # --- Login for Regular User Flow ---
 else:    
-    # --- RENDER SIDEBAR FROM EXTERNAL MODULE ---
-    # --- This handles the File Uploader UI and sets st.session_state['pending_file_context'] ---
     sidebar.render_sidebar()
 
-    # --- Define User-Specific File Paths ---
     user_pkl_path = f"chat_history/{st.session_state.username}_session_state.pkl"
     user_jsonl_path = f"chat_history/{st.session_state.username}_interaction.jsonl"
 
@@ -176,13 +163,12 @@ else:
     user_profile_path = f"chat_history/{st.session_state.username}_profile.txt"
     if not os.path.exists(user_profile_path):
         with open(user_profile_path, "w") as f:
-            # --- Make this dynamic later based on login settings ---
             f.write("Profession: Emergency Manager\nConcern: Fire Safety\nLocation: CA\nTime: Now\nScope: Local")
 
+    # --- STATE INITIALIZATION & RESTORE ---
     if "messages" not in st.session_state:
-        # --- check if the session state variable can be loaded ---
         try:
-            with open(user_pkl_path, "rb") as file:  # --- Modified to use user-specific file ---
+            with open(user_pkl_path, "rb") as file:
                 data = pickle.load(file)
                 for key in ["messages", "assistant", "location_confirmed", "copied", "lat", "lon"]:
                     if key in data.keys():
@@ -190,16 +176,23 @@ else:
         except:
             st.session_state.messages = []
             st.session_state.assistant = AssistantRouter("ChecklistAssistant")
-            with st.chat_message("assistant"):
-                full_response = st.session_state.assistant.get_assistant_response()
+            # Wrap initial assistant call in try/except for safety
+            try:
+                with st.chat_message("assistant"):
+                    full_response = st.session_state.assistant.get_assistant_response()
+            except Exception as e:
+                debug_doctor(e)
+                full_response = "System Error: Could not load initial response."
+                
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             st.session_state.location_confirmed = True
             st.session_state.copied = []
 
         st.rerun()
+        
     elif "messages" in st.session_state:
         try:
-            with open(user_pkl_path, "wb") as file:  # --- Modified to use user-specific file ---
+            with open(user_pkl_path, "wb") as file:
                 states = {}
                 for key in ["messages", "assistant", "location_confirmed", "copied", "lat", "lon"]:
                     if key in st.session_state.keys():
@@ -208,17 +201,27 @@ else:
         except:
             pass
 
+    # --- STATE SAFETY NET ---
+    # --- Prevents AttributeError if session state is partial/corrupted ---
+    if "location_confirmed" not in st.session_state:
+        st.session_state.location_confirmed = False
+    if "lat" not in st.session_state:
+        st.session_state.lat = 34.0522
+    if "lon" not in st.session_state:
+        st.session_state.lon = -118.2437
+    # ------------------------------
+
     index = 0
-    with open(user_jsonl_path, "w") as file:  # --- Modified to use user-specific file ---
+    with open(user_jsonl_path, "w") as file:
         for message in st.session_state.messages:
             index += display_reponse(message, index, file)
 
+    # --- LOCATION CONFIRMATION MAP ---
     if st.session_state.location_confirmed == False:
         lat = st.session_state.lat
         lon = st.session_state.lon
 
-        st.write("The map below shows the initial location with 36km (22 miles) radius. Click on the map to select a location.")
-        # --- Create a Folium map object ---
+        st.write("The map below shows the initial location with 36km radius. Click on the map to select a location.")
         m = folium.Map(location=[lat, lon], zoom_start=9)
         folium.Circle(
             location=[lat, lon],
@@ -230,7 +233,6 @@ else:
         ).add_to(m)
 
         folium.Marker(location=[lat, lon], popup='Initial Location').add_to(m)
-        # --- Add a click listener to the map ---
         m.add_child(folium.ClickForMarker(popup='Clicked Location'))
         m.add_child(folium.LatLngPopup())
         map = st_folium(m, height=350, width=700)
@@ -247,8 +249,8 @@ else:
                 fill_color='red',
                 fill_opacity=0.2
             ).add_to(m2)
-            stream_static_text(f"Clicked Coordinates:{data}. The location, with radius 36km (22 miles), has been shown on the map below. Please confirm the location by clicking the 'Confirm Location' button.")
-            folium.Marker(location=[data[0], data[1]], popup='Initial Location').add_to(m2)
+            stream_static_text(f"Clicked Coordinates:{data}. Please confirm.")
+            folium.Marker(location=[data[0], data[1]], popup='New Location').add_to(m2)
             st_folium(m2, height=350, width=700)
         except:
             data = [lat, lon]
@@ -257,22 +259,27 @@ else:
         # --- Button to confirm the location ---
         if st.button("Confirm Location"):
             st.session_state.location_confirmed = True
-            # --- only show up to 4 decimal places ---
             user_prompt = f"The location has been confirmed: latitude {data[0]}, longitude {data[1]}."
+            
             with st.chat_message("user"):
                 st.markdown(user_prompt)
             st.session_state.messages.append({"role": "user", "content": user_prompt})
+            
             with st.chat_message("assistant"):
-                full_response = st.session_state.assistant.get_assistant_response(user_prompt)
+                try:
+                    full_response = st.session_state.assistant.get_assistant_response(user_prompt)
+                except Exception as e:
+                    debug_doctor(e)
+                    st.stop()
+                    
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             st.rerun()
 
-
-    # --- INPUT SECTION (With Debug Doctor for Voice & Text) ---
+    # --- INPUT SECTION (Wrapped in Doctor) ---
     else:
         # --- 1. GET INPUT (Wrapped in Doctor) ---
         try:
-            # --- If Voice API fails here, it crashes to the 'except' block below ---
+            # If Voice API fails here, it crashes to the 'except' block below
             user_prompt = InputBox.render()
         except Exception as e:
             debug_doctor(e)
