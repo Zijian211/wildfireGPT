@@ -269,7 +269,13 @@ else:
                 st.session_state.messages.append({"role": "user", "content": final_prompt_to_model})
 
                 with st.chat_message("assistant"):
-                    full_response = st.session_state.assistant.get_assistant_response(final_prompt_to_model)
+                    # --- WRAPPED IN DEBUG DOCTOR ---
+                    try:
+                        full_response = st.session_state.assistant.get_assistant_response(final_prompt_to_model)
+                    except Exception as e:
+                        debug_doctor(e)
+                        st.stop()
+                    # -------------------------------
                 
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.rerun()
