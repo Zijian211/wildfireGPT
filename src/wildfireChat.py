@@ -136,7 +136,6 @@ elif auth.is_admin(st.session_state.username):
 # --- Login for Regular User Flow ---
 else:    
     # --- RENDER SIDEBAR FROM EXTERNAL MODULE ---
-    # This handles the File Uploader UI and sets st.session_state['pending_file_context']
     sidebar.render_sidebar()
 
     # --- Define User-Specific File Paths ---
@@ -241,8 +240,12 @@ else:
 
     # --- UPGRADED INPUT SECTION (Voice + File + Text) ---
     else:
-        # --- 1. GET INPUT (Voice or Text) ---
-        user_prompt = InputBox.render()
+        # --- 1. GET INPUT (Wrapped in Doctor) ---
+        try:
+            user_prompt = InputBox.render()
+        except Exception as e:
+            debug_doctor(e)
+            st.stop()
 
         # --- 2. PROCESS INPUT ---
         if user_prompt:
