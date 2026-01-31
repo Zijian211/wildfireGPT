@@ -2,6 +2,7 @@ from src.assistants.profile import ChecklistAssistant
 from src.assistants.plan import PlanAssistant
 from src.assistants.analyst import AnalystAssistant
 import uuid
+import streamlit as st
 
 # --- MOCK THREAD CLASS ---
 class MockThread:
@@ -15,21 +16,19 @@ class MockThread:
             self.id = thread_id
         else:
             self.id = f"local_thread_{str(uuid.uuid4())[:8]}"
-# -------------------------
 
 class AssistantRouter:
     def __init__(self, name, thread_id = None, args={}):
         
-        # --- Local Thread Management instead of client.beta.threads ---
+        # --- Local Thread Management ---
         if thread_id:
             self.current_thread = MockThread(thread_id)
             self.new_thread = False
         else:
             self.current_thread = MockThread()
             self.new_thread = True
-        # ---------------------------------------------------------------------
 
-        # append the thread id in `chat_history/threads.txt` to keep this behavior locally
+        # --- append the thread id in `chat_history/threads.txt` ---
         with open("chat_history/threads.txt", "a") as f:
             f.write(f"{self.current_thread.id}\n")
         
@@ -59,20 +58,55 @@ class AssistantRouter:
     def get_assistant_response(self, user_message: str = None):
         self.new_thread = False
         
-        # This calls the sub-assistant. If the sub-assistants (ChecklistAssistant etc.)
-        full_response, run_id, tool_outputs = self.current_assistant.get_assistant_response(user_message, self.current_thread.id)
+        # =========================================================================
+        # SLIDING WINDOW CONTEXT (Token Saver)
+        # =========================================================================
+        # --- The sub-assistants read `st.session_state.messages` to build the prompt ---
+        # --- If we send the full history (20+ msgs), we hit Rate Limits immediately ---
+        # --- This block forces the Assistant to see only the last 6 messages ---
         
-        if len(tool_outputs):
-            full_response += "\n\n"
-            full_response += self.current_assistant.respond_to_tool_output(self.current_thread.id, run_id, tool_outputs)
-        elif self.new_thread:
-            return self.get_assistant_response()
+        real_messages_backup = st.session_state.messages
+        is_truncated = False
+        
+        # --- Check if history is long enough to need truncation ---
+        if len(real_messages_backup) > 6:
+            # --- 1. Keep System Prompt (Index 0 - The "Brain") and Keep Last 6 Messages (Short-term Memory) ---
+            truncated_history = [real_messages_backup[0]] + real_messages_backup[-6:]
             
-        if hasattr(self.current_assistant, 'visualizations') and len(self.current_assistant.visualizations) > 0:
-            full_response = [full_response, self.current_assistant.visualizations]
-            self.current_assistant.visualizations = []
+            # --- 2. SWAP: Temporarily replace session state with short version ---
+            st.session_state.messages = truncated_history
+            is_truncated = True
+        # =========================================================================
+
+        try:
+            # --- CALL THE API ---
+            # --- The assistant now reads the short `st.session_state.messages` list ---
+            # --- This payload is small (~500 tokens) ---
+            full_response, run_id, tool_outputs = self.current_assistant.get_assistant_response(user_message, self.current_thread.id)
             
-        return full_response
+            if len(tool_outputs):
+                full_response += "\n\n"
+                full_response += self.current_assistant.respond_to_tool_output(self.current_thread.id, run_id, tool_outputs)
+            elif self.new_thread:
+                # --- Recursively call if thread changed ---
+                # --- The `finally` block will handle restoration before the recursive call returns ---
+                return self.get_assistant_response()
+                
+            if hasattr(self.current_assistant, 'visualizations') and len(self.current_assistant.visualizations) > 0:
+                full_response = [full_response, self.current_assistant.visualizations]
+                self.current_assistant.visualizations = []
+                
+            return full_response
+
+        finally:
+            # =====================================================================
+            # [CRITICAL RESTORE] UNDO THE SWAP
+            # =====================================================================
+            # --- We MUST restore the original full history immediately ---
+            # --- If we don't do this, the UI will "forget" the old messages ---
+            if is_truncated:
+                st.session_state.messages = real_messages_backup
+            # =====================================================================
     
     def resume_conversation(self):
         """
@@ -81,5 +115,4 @@ class AssistantRouter:
         """
         print("Warning: 'Resume Conversation' is not supported with DeepSeek (No server-side thread history).")
         pass
-
             

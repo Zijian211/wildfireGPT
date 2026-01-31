@@ -1,9 +1,9 @@
 case,aspect,human_score,input_score,reasoning
-turn_0,relevance,Not Applicable,No,No - The response is an introduction and does not directly answer the user's question about starting the conversation.
-turn_0,relevance,Not Applicable,Could be better,"Could be better - While the response mentions ""wildfire risk consultant"", it does not specifically tailor to the user's profession, which is unknown."
-turn_0,relevance,Not Applicable,Yes,Yes - The response addresses the user's concern about wildfire risks by introducing itself as a wildfire risk consultant and offering to help understand and prepare for potential risks.
+turn_0,relevance,Not Applicable,No,No - The response is an introduction and does not directly answer the user's question.
+turn_0,relevance,Not Applicable,Could be better,"Could be better - While the response mentions ""wildfire risk consultant"", it does not specifically tailor to the user's profession, which is unknown at this point."
+turn_0,relevance,Not Applicable,Yes,Yes - The response addresses the user's concern about wildfire risks by introducing itself as a wildfire risk consultant and offering to help with understanding and preparing for potential risks.
 turn_0,relevance,Not Applicable,Not Applicable,"Not Applicable - The response does not mention Sydney, NSW, Australia or any specific location. It only mentions that WildfireGPT can analyze wildfire risks within 36km (22 miles) of a given location specified by latitude and longitude."
-turn_0,relevance,Not Applicable,Yes,Yes - The response does not impose any strict timeline on the user and allows for an open-ended conversation.
+turn_0,relevance,Not Applicable,Not Applicable,"Not Applicable - There is no timeline mentioned in the response, so it cannot be strictly adhered to."
 turn_0,entailment,Not Applicable,Yes,"No (Good)
 The model's response does not contain any information that contradicts the Tool Outputs."
 turn_0,entailment,N/A,No,"No (Good)
@@ -16,7 +16,7 @@ turn_1,relevance,Not Applicable,No,"No - The response does not directly answer t
 turn_1,relevance,Not Applicable,Could be better,"Could be better - While the response acknowledges the user's location, it doesn't specifically tailor itself to their profession. It could have asked about their profession or expertise in wildfire risks assessment."
 turn_1,relevance,Not Applicable,Yes,"Yes - The response does address the user's concern about wildfire risks, albeit indirectly by asking for more information and proposing a collaborative approach."
 turn_1,relevance,Not Applicable,Yes,"Yes - The response accurately acknowledges the user's location as Sydney, NSW, Australia."
-turn_1,relevance,Not Applicable,Not Applicable,"Not Applicable - Since the timeline is unknown (open-ended), it's not applicable to assess whether the response strictly adheres to it."
+turn_1,relevance,Not Applicable,Not Applicable,"Not Applicable - Since the timeline is unknown (awaiting response from user), it's not possible to assess whether the response strictly adheres to it."
 turn_1,entailment,Not Applicable,Yes,"No (Good)
 The model's response does not contain any information that contradicts the Tool Outputs."
 turn_1,entailment,N/A,Not Applicable,"Not Applicable (Good)
