@@ -209,6 +209,46 @@ class Evaluator:
 
         self._log(f"Active User Profile: {user_profile_content[:100]}...")
         return parse_user_profile(user_profile_content)
+    
+    def extract_persona_for_turn(self, messages, turn_index, current_entry):
+        """
+        Extract the persona that was active at a specific turn in the conversation.
+        """
+        # --- Default to the overall user profile persona ---
+        default_persona = self.user_profile.get('persona', 'Unknown')
+        
+        # --- Check if the current entry has persona information ---
+        if 'user_persona' in current_entry:
+            return current_entry.get('user_persona', default_persona)
+        
+        # --- Look backwards through messages to find the most recent persona change ---
+        for i in range(turn_index, -1, -1):
+            if i < len(messages):
+                msg = messages[i]
+                content = msg.get('content', '')
+
+                # --- Check for persona change patterns in assistant messages ---
+                if msg.get('role') == 'assistant':
+                    if 'Profile Updated:' in content or 'switched to' in content.lower():
+                        # Extract persona from message
+                        if 'School Principal' in content:
+                            return 'School Principal'
+                        elif 'Logistics Manager' in content:
+                            return 'Logistics Manager'
+                        elif 'Insurance Risk Assessor' in content:
+                            return 'Insurance Risk Assessor'
+                        elif 'Power Grid Operator' in content:
+                            return 'Power Grid Operator'
+                        elif 'Real Estate Developer' in content:
+                            return 'Real Estate Developer'
+                        elif 'Park Ranger' in content or 'Tourism' in content:
+                            return 'Park Ranger / Tourism'
+                        elif 'Other Careers' in content:
+                            return 'Other Professional'
+                        elif 'Emergency Commander' in content:
+                            return 'Emergency Commander (Gov)'
+        
+        return default_persona
 
     # --- KEEPING OLD LOADER FOR BACKWARD COMPATIBILITY IF NEEDED ---
     def _load_user_profile(self) -> Dict:
@@ -251,8 +291,11 @@ class Evaluator:
             self._log(f"API Error: {e}")
             return None
 
-    def evaluate_single_aspect(self, tool_outputs, llm_response, data_type, previous_query, aspect):
+    def evaluate_single_aspect(self, tool_outputs, llm_response, data_type, previous_query, aspect, user_profile=None):
         """Uses prompts.py logic to generate the evaluation prompt."""
+        if user_profile is None:
+            user_profile = self.user_profile
+
         prompt_method_name = (
             f'evaluate_{aspect}_in_reference' if data_type == 'literature'
             else f'evaluate_{aspect}_in_values_and_recommendations'
@@ -264,7 +307,7 @@ class Evaluator:
             return None
 
         # --- Build context for the prompt ---
-        messages = prompt_method(tool_outputs, llm_response, self.user_profile, previous_query)
+        messages = prompt_method(tool_outputs, llm_response, user_profile, previous_query)
         return self.generate_eval_response(messages)
 
     def llm_evaluate(self):
@@ -275,7 +318,7 @@ class Evaluator:
         self._log("Starting llm_evaluate loop...")
         
         # --- Define Columns matching your desired CSV format ---
-        df = pd.DataFrame(columns=['case', 'aspect', 'human_score', 'input_score', 'reasoning'])
+        df = pd.DataFrame(columns=['case', 'aspect', 'human_score', 'input_score', 'reasoning', 'persona'])
 
         if not self.data_dict:
             self._log("Data dict empty. Writing empty CSV.")
@@ -289,6 +332,14 @@ class Evaluator:
             data_type = data.get('type', 'general')
             previous_query = data.get('previous_query', '')
             current_entry = data.get('current_entry', {})
+            
+            # --- Extract persona for this specific turn ---
+            turn_persona = self.extract_persona_for_turn(self.interaction_history, i, current_entry)
+            
+            # --- Update user profile for this turn ---
+            turn_user_profile = self.user_profile.copy()
+            turn_user_profile['persona'] = turn_persona
+            turn_user_profile['profession'] = turn_persona  # --- Use persona as profession for evaluation ---
 
             # --- 1. Evaluate Qualitative Aspects (Relevance, Entailment, Accessibility) ---
             for aspect in ['relevance', 'entailment', 'accessibility']:
@@ -296,7 +347,7 @@ class Evaluator:
                 human_score = parse_current_entry(current_entry, aspect)
                 
                 # --- Call the specific prompt from prompts.py ---
-                response = self.evaluate_single_aspect(tool_outputs, llm_response, data_type, previous_query, aspect)
+                response = self.evaluate_single_aspect(tool_outputs, llm_response, data_type, previous_query, aspect, turn_user_profile)
                 
                 if response:
                     # --- Use utils.py to parse the "Yes/No" list output ---
@@ -323,7 +374,8 @@ class Evaluator:
                         'aspect': [aspect] * target_len,
                         'human_score': human_score,
                         'input_score': input_score,
-                        'reasoning': reasonings
+                        'reasoning': reasonings,
+                        'persona': [turn_persona] * target_len  # --- Add persona column ---
                     })
                     df = pd.concat([df, new_row], ignore_index=True)
                 else:

@@ -16,7 +16,12 @@ def normalize_text(text):
     """
     if not text:
         return ""
-    return "".join(text.split())
+    
+    # --- CRITICAL FIX: Handle Tuple (Text, Visualizations) ---
+    if isinstance(text, tuple):
+        text = text[0]
+        
+    return "".join(str(text).split())
 
 
 def find_previous_user_query(interactions, llm_response_fragment):
@@ -29,6 +34,10 @@ def find_previous_user_query(interactions, llm_response_fragment):
     if not interactions or not llm_response_fragment:
         return None
 
+    # --- CRITICAL FIX: Handle Tuple ---
+    if isinstance(llm_response_fragment, tuple):
+        llm_response_fragment = llm_response_fragment[0]
+
     # Prepare the search fragment (clean up the text we are looking for)
     clean_fragment = normalize_text(llm_response_fragment)
     
@@ -40,8 +49,13 @@ def find_previous_user_query(interactions, llm_response_fragment):
         if entry['role'] == 'user':
             last_user_content = entry['content']
         elif entry['role'] == 'assistant':
+            # --- CRITICAL FIX: Handle Tuple in History ---
+            content = entry['content']
+            if isinstance(content, tuple):
+                content = content[0]
+
             # Normalize the history content to match the fragment
-            clean_content = normalize_text(entry['content'])
+            clean_content = normalize_text(content)
             
             # Check if our fragment exists inside this history entry
             if clean_fragment in clean_content:
@@ -134,6 +148,42 @@ def parse_user_profile(content):
             # Add the key-value pair to the dictionary
             user_profile[key] = value
 
+    # --- ENHANCEMENT: Extract and normalize profession if not explicitly set ---
+    if 'profession' not in user_profile:
+        # Try to infer from persona
+        if 'persona' in user_profile:
+            persona = user_profile['persona']
+            if 'Emergency Commander' in persona:
+                user_profile['profession'] = 'Emergency Commander (Government)'
+            elif 'Insurance Risk Assessor' in persona:
+                user_profile['profession'] = 'Insurance Risk Assessor'
+            elif 'Power Grid Operator' in persona:
+                user_profile['profession'] = 'Power Grid Operator'
+            elif 'Logistics Manager' in persona:
+                user_profile['profession'] = 'Logistics Manager'
+            elif 'Real Estate Developer' in persona:
+                user_profile['profession'] = 'Real Estate Developer'
+            elif 'Park Ranger' in persona or 'Tourism' in persona:
+                user_profile['profession'] = 'Park Ranger / Tourism'
+            elif 'Other Careers' in persona:
+                user_profile['profession'] = 'Other Professional'
+            else:
+                user_profile['profession'] = persona
+        else:
+            user_profile['profession'] = 'Unknown'
+
+    # --- ENHANCEMENT: Ensure location is properly formatted ---
+    if 'location' in user_profile and 'lat' not in user_profile:
+        # Try to extract lat/lon from location string
+        location = user_profile['location']
+        if 'latitude' in location.lower() and 'longitude' in location.lower():
+            import re
+            lat_match = re.search(r'latitude\s*([-\d.]+)', location, re.IGNORECASE)
+            lon_match = re.search(r'longitude\s*([-\d.]+)', location, re.IGNORECASE)
+            if lat_match and lon_match:
+                user_profile['lat'] = float(lat_match.group(1))
+                user_profile['lon'] = float(lon_match.group(1))
+
     return user_profile
 
 def parse_current_entry(entry, aspect):
@@ -168,11 +218,10 @@ def parse_current_entry(entry, aspect):
     return return_list
             
 
-
 def convert_scores(input_score, aspect):
     # --- FIX FOR CLOUD/LLAMA-3: CLEAN MARKDOWN ---
     # Llama-3 often wraps output in ```python ... ```
-    input_score = re.sub(r"```python", "", input_score)
+    input_score = re.sub(r"```python", "", str(input_score)) # Ensure string input
     input_score = re.sub(r"```", "", input_score).strip()
     # ---------------------------------------------
 

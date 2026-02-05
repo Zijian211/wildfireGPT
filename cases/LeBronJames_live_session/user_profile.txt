@@ -1,9 +1,7 @@
-Here is the extracted user profile information:
-
-Name: LeBron James
-Location: Hollywood, Los Angeles, California, USA
-Concern: Property damage due to wildfires during an emergency
-Timeline: Short-term (1-10 years)
-Profession: Public figure and NBA player
-
-Note: The user's profession is not explicitly stated as a specific job title, but it is mentioned that they are a public figure and a renowned NBA player.
+User: LeBronJames
+Persona: Logistics Manager
+Profession: Logistics Manager
+Location: Latitude -33.76773195605407, Longitude 150.72418212890628
+Concern: Switched to 🚚 Logistics Manager mode
+Timeline: 
+Created: 2026-02-05T15:53:53.156068

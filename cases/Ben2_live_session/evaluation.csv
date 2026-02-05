@@ -1,0 +1,128 @@
+case,aspect,human_score,input_score,reasoning,persona
+turn_0,relevance,Not Applicable,No,No - The response does not directly answer the user's last question about confirming the location.,Logistics Manager
+turn_0,relevance,Not Applicable,Could be better,"Could be better - While the model acknowledges the location confirmation, it doesn't specifically tailor its response to the Logistics Manager role or context.",Logistics Manager
+turn_0,relevance,Not Applicable,Not Applicable,"Not Applicable - The response is not addressing the user's stated concern (switched to 🚚 Logistics Manager mode), as it seems unrelated to that topic.",Logistics Manager
+turn_0,relevance,Not Applicable,Yes,Yes - The model accurately notes down the location coordinates provided by the user.,Logistics Manager
+turn_0,relevance,Not Applicable,Not Applicable,"Not Applicable - There is no specific timeline mentioned in the user's input or the model's response, so this question doesn't apply.",Logistics Manager
+turn_0,entailment,Not Applicable,Yes,"No
+(2) Not Applicable
+(3) Yes",Logistics Manager
+turn_0,entailment,N/A,Not Applicable,,Logistics Manager
+turn_0,entailment,N/A,No,,Logistics Manager
+turn_0,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",Logistics Manager
+turn_0,accessibility,Not Applicable,Not too long,,Logistics Manager
+turn_1,relevance,Not Applicable,No,"No - The response does not directly answer the user's last question, which was about switching to **Other Careers**.",Logistics Manager
+turn_1,relevance,Not Applicable,Could be better,"Could be better - While the response acknowledges that the user has switched to Logistics Manager mode, it doesn't specifically tailor the response to this role or use context relevant to a Logistics Manager.",Logistics Manager
+turn_1,relevance,Not Applicable,Not Applicable,"Not Applicable - The response does not directly address the user's stated concern about switching to **Other Careers**. Instead, it asks for more information about the user's job title or industry.",Logistics Manager
+turn_1,relevance,Not Applicable,Not Applicable,"Not Applicable - The response is not accurate to the user's location, as it doesn't mention anything specific about their location.",Logistics Manager
+turn_1,relevance,Not Applicable,Not Applicable,"Not Applicable - The response does not strictly adhere to the user's timeline, as there is no relevant information provided about the user's past or future activities.",Logistics Manager
+turn_1,entailment,Not Applicable,Yes,"No (Good)
+The model's response does not contain any information that contradicts the Tool Outputs.",Logistics Manager
+turn_1,entailment,N/A,Not Applicable,"Not Applicable (Good)
+There is no new information in the model's response that was not found in the Tool Outputs, so it does not hallucinate.",Logistics Manager
+turn_1,entailment,N/A,No,"Yes (Good)
+The model's response is fully supported by the provided context, which is a direct chat with no tools or specific job title/industry mentioned.",Logistics Manager
+turn_1,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",Logistics Manager
+turn_1,accessibility,Not Applicable,Not too long,,Logistics Manager
+turn_2,relevance,Not Applicable,No,"No - The response does not directly answer the user's last question, which was ""Start of conversation"". Instead, it seems to be switching to a different mode or dashboard.",School Principal
+turn_2,relevance,Not Applicable,Could be better,"Could be better - While the response mentions a ""dashboard"", it doesn't specifically use context relevant to the School Principal role. It could be more tailored to the user's profession and concerns.",School Principal
+turn_2,relevance,Not Applicable,No,"No - The response does not directly address the user's stated concern, which was switching to 🚚 Logistics Manager mode. Instead, it seems to be switching to a different dashboard.",School Principal
+turn_2,relevance,Not Applicable,Not Applicable,"Not Applicable - The response doesn't mention anything about the user's location (Latitude  -33.801973518065886, Longitude 151.02355957031253).",School Principal
+turn_2,relevance,Not Applicable,Not Applicable,Not Applicable - The response doesn't mention anything about the user's timeline.,School Principal
+turn_2,entailment,Not Applicable,Yes,"No (Good)
+The model's response does not contain any information that contradicts the Tool Outputs.",School Principal
+turn_2,entailment,N/A,Not Applicable,"Not Applicable (Good)
+There is no new information in the model's response that was not found in the Tool Outputs, so it does not hallucinate.",School Principal
+turn_2,entailment,N/A,No,"Yes (Good)
+The model's response is fully supported by the provided context of a direct chat with no tools mentioned.",School Principal
+turn_2,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",School Principal
+turn_2,accessibility,Not Applicable,Not too long,,School Principal
+turn_3,relevance,Not Applicable,No,No - The response does not directly answer the user's last question about wildfire risks.,School Principal
+turn_3,relevance,Not Applicable,Could be better,"Could be better - While the response acknowledges the user as a School Principal, it doesn't specifically address any concerns related to that role or persona.",School Principal
+turn_3,relevance,Not Applicable,Not Applicable,"Not Applicable - The response is not addressing the user's stated concern about wildfire risks, which has been switched to Logistics Manager mode.",School Principal
+turn_3,relevance,Not Applicable,No,No - The location provided (Latitude and Longitude) does not seem relevant to the context of wildfire risks for a school in Australia.,School Principal
+turn_3,relevance,Not Applicable,Not Applicable,Not Applicable - There is no timeline mentioned in the response that directly addresses the user's concerns or actions.,School Principal
+turn_3,entailment,Not Applicable,Yes,"No, the response does not contain information that contradicts the Tool Outputs.",School Principal
+turn_3,entailment,N/A,No,"No, the response does not hallucinate new facts not found in the Tool Outputs.",School Principal
+turn_3,entailment,N/A,No,"Yes, the response is fully supported by the provided context (the prompt and the model's own text).",School Principal
+turn_3,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",School Principal
+turn_3,accessibility,Not Applicable,Not too long,,School Principal
+turn_4,relevance,Not Applicable,No,No - The response does not directly answer the user's last question about checking the latitude and longitude before.,School Principal
+turn_4,relevance,Not Applicable,Could be better,"Could be better - While the response acknowledges the user's input, it doesn't specifically tailor to the School Principal role or persona.",School Principal
+turn_4,relevance,Not Applicable,Not Applicable,Not Applicable - The response is not addressing the user's stated concern about wildfire risks in relation to their school.,School Principal
+turn_4,relevance,Not Applicable,Not Applicable,"Not Applicable - Since the location coordinates are provided, accuracy is not an issue here.",School Principal
+turn_4,relevance,Not Applicable,No,"No - The response does not strictly adhere to the user's timeline, which was focused on discussing wildfire risks.",School Principal
+turn_4,entailment,Not Applicable,Yes,"No (Good)
+The model's response does not contain any information that contradicts the Tool Outputs.",School Principal
+turn_4,entailment,N/A,Not Applicable,"Not Applicable (Good)
+There is no new information in the model's response that was not found in the Tool Outputs, so it does not hallucinate.",School Principal
+turn_4,entailment,N/A,No,"Yes (Good)
+The model's response is fully supported by the provided context. It mentions verifying location coordinates on a map and then moving on to the next question about wildfire risks at school.",School Principal
+turn_4,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",School Principal
+turn_4,accessibility,Not Applicable,Not too long,,School Principal
+turn_5,relevance,Not Applicable,No,No - The response does not directly answer the user's last question about caring for potential damage to school buildings or equipment.,School Principal
+turn_5,relevance,Not Applicable,Could be better,"Could be better - While the response acknowledges the School Principal's concern, it does not specifically tailor its language to this role. It could be more effective in using context specific to a School Principal.",School Principal
+turn_5,relevance,Not Applicable,Yes,Yes - The response directly addresses the user's stated concern about potential damage to school buildings or equipment due to wildfires.,School Principal
+turn_5,relevance,Not Applicable,Not Applicable,"Not Applicable - The location provided is irrelevant to the response, which focuses on general concerns about wildfire damage and financial risk.",School Principal
+turn_5,relevance,Not Applicable,Not Applicable,"Not Applicable - The timeline provided is also irrelevant, as the response does not address any specific time frame for assessing risks.",School Principal
+turn_5,entailment,Not Applicable,Yes,"No
+(2) No
+(3) Yes",School Principal
+turn_5,entailment,N/A,No,,School Principal
+turn_5,entailment,N/A,No,,School Principal
+turn_5,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",School Principal
+turn_5,accessibility,Not Applicable,Not too long,,School Principal
+turn_6,relevance,Not Applicable,No,No - The response does not directly answer the user's last question about seeing the files they upload.,School Principal
+turn_6,relevance,Not Applicable,Could be better,"Could be better - While the response acknowledges the file being uploaded, it doesn't specifically tailor to the School Principal role or context.",School Principal
+turn_6,relevance,Not Applicable,Not Applicable,Not Applicable - The response is not addressing the user's concern about switching to Logistics Manager mode.,School Principal
+turn_6,relevance,Not Applicable,Not Applicable,Not Applicable - The location information provided does not affect the accuracy of the response.,School Principal
+turn_6,relevance,Not Applicable,Not Applicable,"Not Applicable - There is no timeline mentioned in the response, so it doesn't adhere to any specific timeline.",School Principal
+turn_6,entailment,Not Applicable,Yes,"No (Good)
+The model's response is consistent with the Tool Outputs, which mention an uploaded file containing expert scores for wildfires.",School Principal
+turn_6,entailment,N/A,No,"No (Good)
+There is no new information in the model's response that contradicts or goes beyond what is present in the Tool Outputs.",School Principal
+turn_6,entailment,N/A,No,"Yes (Good)
+The model's response is fully supported by the provided context, which mentions an uploaded file and asks about specific information to focus on.",School Principal
+turn_6,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",School Principal
+turn_6,accessibility,Not Applicable,Not too long,,School Principal
+turn_7,relevance,Not Applicable,No,"No - The response does not directly answer the user's last question (""What is your primary concern right now?"").",School Principal
+turn_7,relevance,Not Applicable,No,"No - The response is not specifically tailored to the user's current role/ persona as School Principal, but rather switches to a different mode (Logistics Manager).",School Principal
+turn_7,relevance,Not Applicable,Not Applicable,Not Applicable - The response does not address the user's stated concern about switching to Logistics Manager mode.,School Principal
+turn_7,relevance,Not Applicable,Not Applicable,Not Applicable - The response does not provide any information related to the user's location.,School Principal
+turn_7,relevance,Not Applicable,Not Applicable,"Not Applicable - The response does not adhere to the user's timeline, as it is a sudden change in mode and context.",School Principal
+turn_7,entailment,Not Applicable,Yes,"No (Good)
+The model's response does not contain any information that contradicts the Tool Outputs.",School Principal
+turn_7,entailment,N/A,Not Applicable,"Not Applicable (Good)
+There is no new information in the model's response that was not found in the Tool Outputs, so it does not hallucinate.",School Principal
+turn_7,entailment,N/A,No,"Yes (Good)
+The model's response is fully supported by the provided context of a direct chat and the mention of adjusting risk parameters for a Logistics Manager role.",School Principal
+turn_7,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",School Principal
+turn_7,accessibility,Not Applicable,Not too long,,School Principal
+turn_8,relevance,Not Applicable,No,No - The response does not directly answer the user's last question about personal security.,School Principal
+turn_8,relevance,Not Applicable,Could be better,"Could be better - Although the response acknowledges the user's concern, it does not specifically tailor to the School Principal role or persona.",School Principal
+turn_8,relevance,Not Applicable,No,No - The response does not directly address the user's stated concern about losing personal security in their grocery store.,School Principal
+turn_8,relevance,Not Applicable,Not Applicable,"Not Applicable - The response does not mention the user's location at all, so accuracy cannot be evaluated.",School Principal
+turn_8,relevance,Not Applicable,No,"No - The response does not adhere to the user's timeline, as it seems to assume a different scenario (wildfires and logistics management).",School Principal
+turn_8,entailment,Not Applicable,Yes,"No (Good)
+The model's response does not contain any information that contradicts the Tool Outputs.",School Principal
+turn_8,entailment,N/A,Not Applicable,"Not Applicable (Good)
+There is no new information in the model's response that was not found in the Tool Outputs, so it does not hallucinate.",School Principal
+turn_8,entailment,N/A,No,"Yes (Good)
+The model's response is fully supported by the provided context, as it asks follow-up questions to gather more information and understand the situation better.",School Principal
+turn_8,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",School Principal
+turn_8,accessibility,Not Applicable,Not too long,,School Principal
+turn_9,relevance,Not Applicable,No,No - The response does not directly answer the user's last question about why longitude and latitude are used before checking the first conversation.,School Principal
+turn_9,relevance,Not Applicable,Could be better,"Could be better - Although the response is related to logistics, it seems out of context for a School Principal. A more tailored response would consider the school principal's role and concerns.",School Principal
+turn_9,relevance,Not Applicable,No,No - The response does not directly address the user's concern about switching to Logistics Manager mode.,School Principal
+turn_9,relevance,Not Applicable,Not Applicable,"Not Applicable - The response does not mention the user's location at all, so it is not accurate or relevant to their location.",School Principal
+turn_9,relevance,Not Applicable,No,"No - The response does not adhere to the user's timeline, as it seems unrelated to the previous conversation.",School Principal
+turn_9,entailment,Not Applicable,Error Parsing,"(1) No (Good)
+The model's response does not contain any information that contradicts the Tool Outputs.
+
+(2) No (Good)
+The model's response does not hallucinate new facts not found in the Tool Outputs.
+
+(3) Yes (Good)
+The model's response is fully supported by the provided context, which is a conversation about logistics and supply chain management.",School Principal
+turn_9,accessibility,Not Applicable,Too long,"['Too long', 'Not too long']",School Principal
+turn_9,accessibility,Not Applicable,Not too long,,School Principal

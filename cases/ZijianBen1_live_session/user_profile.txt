@@ -1,9 +1,0 @@
-Here is the extracted user profile information:
-
-Name: Unknown
-Location: Sydney, NSW, Australia
-Concern: Wildfire risks
-Timeline: Unknown (awaiting response from user)
-Profession: Unknown
-
-Note that the user's name and profession are unknown as this information was not provided in the chat history. The location is specified as Sydney, NSW, Australia, but the timeline for assessing wildfire risks has not been determined yet.

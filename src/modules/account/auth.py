@@ -69,9 +69,15 @@ def save_user(username, password, security_questions=None):
     """
     Saves a new user with password and optional security questions.
     """
-    users = load_users()
+    
+    # --- Prevent Admin Username from being registered ---
+    if username == ADMIN_USERNAME:
+        return False
+    
+    users = load_users()   
+    # --- User already exists ---
     if username in users:
-        return False  # User already exists
+        return False
 
     # --- Process Security Questions (Hash the answers) ---
     processed_questions = []

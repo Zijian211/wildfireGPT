@@ -1,0 +1,7 @@
+User: Ben2
+Persona: Logistics Manager
+Profession: Logistics Manager
+Location: Latitude -33.801973518065886, Longitude 151.02355957031253
+Concern: Switched to 🚚 Logistics Manager mode
+Timeline: 
+Created: 2026-02-04T18:46:31.869743

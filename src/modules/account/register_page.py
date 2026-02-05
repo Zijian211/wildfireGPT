@@ -1,5 +1,5 @@
 import streamlit as st
-import modules.auth as auth
+import modules.account.auth as auth
 
 def render_register_page():
     """
@@ -47,9 +47,12 @@ def render_register_page():
     st.markdown("---")
 
     if st.button("Create Account", type="primary"):
-        # --- VALIDATION ---
+        # --- VALIDATION for REGISETR ---
         if not auth.validate_username(new_user):
             st.error("❌ Username can only contain letters and numbers.")
+        
+        elif new_user == auth.ADMIN_USERNAME:
+            st.error(f"❌ Username '{auth.ADMIN_USERNAME}' is reserved for system administrator.")
         
         elif not auth.validate_password(new_pass):
             st.error("❌ Password must be > 6 chars and contain a letter.")

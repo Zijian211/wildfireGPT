@@ -1,5 +1,5 @@
 import streamlit as st
-import modules.auth as auth
+import modules.account.auth as auth
 import time
 
 def render_forgot_password_page():

@@ -1,7 +1,7 @@
 import streamlit as st
-import modules.auth as auth
-import modules.register_page as register_page
-import modules.password_forgotten as password_forgotten
+import modules.account.auth as auth
+import modules.account.register_page as register_page
+import modules.ui.password_forgotten as password_forgotten
 
 def render_login_page():
     """

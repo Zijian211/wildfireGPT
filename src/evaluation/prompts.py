@@ -4,23 +4,49 @@ class Prompts:
     def __init__(self):
         pass
 
+    # --- ✅ NEW HELPER: Extract text from Tuple ---
+    def _sanitize(self, response):
+        """
+        Safely extracts the text string if the response is a tuple (text, visuals).
+        """
+        if isinstance(response, tuple):
+            return str(response[0]) 
+        return str(response)
+
     def evaluate_relevance_in_reference(self, tool_output, llm_response, user_profile=None, previous_query=None):
         """
-        STRICTER VERSION: Removed 'Don't be too harsh' and added critical instructions.
+        Removed 'Don't be too harsh' and added critical instructions.
         """
+        # --- Sanitize input to prevent crash ---
+        llm_response = self._sanitize(llm_response)
+        
+        # --- Handle missing user profile gracefully ---
+        persona = user_profile.get('persona', 'Unknown') if user_profile else 'Unknown'
+        profession = user_profile.get('profession', persona) if user_profile else persona  # Use profession if available
+        concern = user_profile.get('concern', 'Wildfire risk assessment') if user_profile else 'Wildfire risk assessment'
+        location = user_profile.get('location', 'Unknown') if user_profile else 'Unknown'
+        timeline = user_profile.get('timeline', 'Current') if user_profile else 'Current'
+
         message = [
-            "You are a strict QA Auditor. Your task is to critically analyze the relevance of the model's response. "
+            f"You are a strict QA Auditor evaluating an AI assistant's response. The user's current role/persona is: {persona} (Profession: {profession}). "
+            "Your task is to critically analyze the relevance of the model's response. "
             "For each question, answer 'Yes', 'No', 'Could be better', or 'Not Applicable'. "
             "If the response is vague, generic, or slightly off-topic, mark it as 'Could be better' or 'No'. "
             "Do not give the model the benefit of the doubt. "
             "Output strictly a Python list like ['Yes', 'No', 'Not Applicable']. Do NOT provide any preamble or explanation before the list.",
 
-            "Given this model's response: \n" + llm_response + "\n\n"
-            "(1) Does the response DIRECTLY answer the user's last question? The question is '" + str(previous_query) + "' Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
-            "(2) Is the response specifically tailored to the user's profession? The profession is '" + str(user_profile.get('profession', 'Unknown')) + "' Answer 'Yes' only if specific professional context is used, otherwise 'Could be better' or 'No'.\n"
-            "(3) Is the response directly addressing the user's concern? The concern is '" + str(user_profile.get('concern', 'Unknown')) + "' Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
-            "(4) Is the response accurate to the user's location? The location is '" + str(user_profile.get('location', 'Unknown')) + "' Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
-            "(5) Is the response strictly adhering to the user's timeline? The timeline is '" + str(user_profile.get('timeline', 'Unknown')) + "' Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
+            f"Given this model's response: \n{llm_response}\n\n"
+            f"User's last question/input: '{str(previous_query)}'\n\n"
+            f"User's current role/persona: {persona}\n"
+            f"User's profession: {profession}\n"
+            f"User's concern: {concern}\n"
+            f"User's location: {location}\n"
+            f"User's timeline: {timeline}\n\n"
+            "(1) Does the response DIRECTLY answer the user's last question? Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
+            "(2) Is the response specifically tailored to the user's current role/persona? Answer 'Yes' only if it uses specific context for this role, otherwise 'Could be better' or 'No'.\n"
+            "(3) Is the response directly addressing the user's stated concern? Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
+            "(4) Is the response accurate to the user's location? Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
+            "(5) Is the response strictly adhering to the user's timeline? Answer 'Yes', 'No', 'Could be better', or 'Not Applicable'.\n"
             "Please answer these questions one by one with your reasoning. You MUST mark the response to each question in a format of (1), (2), (3), (4), and (5).\n"
             "Lastly, output a Python list of your responses."
         ]
@@ -33,6 +59,9 @@ class Prompts:
         """
         STRICTER VERSION: Checks for hallucinations.
         """
+        # --- Sanitize input to prevent crash ---
+        llm_response = self._sanitize(llm_response)
+
         message = [
             "You are a Fact-Checker. Your task is to verify if the model's response is supported by the Tool Outputs. "
             "If the model claims something not present in the tool outputs, it is a Hallucination. "
@@ -52,6 +81,9 @@ class Prompts:
         return self.evaluate_entailment_in_reference(tool_output, llm_response, user_profile, previous_query)
 
     def evaluate_accessibility_in_reference(self, tool_output, llm_response, user_profile=None, previous_query=None):
+        # --- Sanitize input to prevent crash ---
+        llm_response = self._sanitize(llm_response)
+
         message = [
             "You are a ruthless Editor. Your goal is to keep responses short and concise.",
             "Analyze the model's response length and fluff.",
@@ -73,6 +105,9 @@ class Prompts:
         """
         Standard Correctness check.
         """
+        # --- Sanitize input to prevent crash ---
+        llm_response = self._sanitize(llm_response)
+
         message = [
             "You are a strict grader. Compare the model's response to the tool outputs. "
             "Identify key entities (locations, numbers, dates, specific names) in the Tool Outputs and check if they appear correctly in the Response.\n",
