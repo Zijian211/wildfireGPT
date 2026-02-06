@@ -1,0 +1,12 @@
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\HuaBen1_live_session
+Loaded 12 interaction lines.
+Loaded 0 items from tools.txt
+Tools data empty. Falling back to Chat History parsing.
+Generated 7 evaluation items from Chat History.
+Active User Profile: User: HuaBen1
+Persona: Power Grid Operator
+Profession: Power Grid Operator
+Location: Latitude -33.81...
+Starting llm_evaluate loop...
+Evaluation finished successfully.

@@ -35,7 +35,7 @@ class AssistantRouter:
         except:
             pass  # Silently fail if file doesn't exist
         
-        # Define assistant mappings
+        # --- Define assistant mappings to their classes and config paths ---
         self.assistant_dict = {
             "ChecklistAssistant": [ChecklistAssistant, "src/assistants/profile/config.yml"],
             "FollowUpAssistant": [ChecklistAssistant, "src/assistants/profile/config_follow_up.yml"],
@@ -43,7 +43,7 @@ class AssistantRouter:
             "AnalystAssistant": [AnalystAssistant, "src/assistants/analyst/config.yml"]
         }
 
-        # Initialize the assistant
+        # --- Initialize the assistant based on the provided name ---
         if name in self.assistant_dict:
             AssistantClass = self.assistant_dict[name][0]
             config_path = self.assistant_dict[name][1]
@@ -98,7 +98,7 @@ class AssistantRouter:
         self.new_thread = False
         
         # =========================================================================
-        # SLIDING WINDOW CONTEXT (Token Saver)
+        # --- SLIDING WINDOW CONTEXT (Token Saver) ---
         # =========================================================================
         if hasattr(st, 'session_state') and 'messages' in st.session_state:
             real_messages_backup = st.session_state.messages
@@ -117,38 +117,38 @@ class AssistantRouter:
             # --- CALL THE API ---
             response_data = self.current_assistant.get_assistant_response(user_message, self.current_thread.id)
             
-            # DEBUG: Show what we received from the assistant
+            # --- DEBUG: Show what we received from the assistant before unpacking ---
             self._debug_assistant_response(response_data)
         
-            # SAFE RESPONSE EXTRACTION
+            # --- SAFE RESPONSE EXTRACTION ---
             full_response = ""
             
-            # Handle different return formats
+            # --- Handle different return formats ---
             if isinstance(response_data, tuple):
-                # Extract based on tuple length
+                # --- Extract based on tuple length ---
                 if len(response_data) >= 3:
-                    # Format: (full_response, run_id, tool_outputs)
+                    # --- Format: (full_response, run_id, tool_outputs) ---
                     full_response = str(response_data[0]) if response_data[0] is not None else ""
                 elif len(response_data) == 2:
-                    # Format: (response, something_else)
+                    # --- Format: (response, something_else) ---
                     full_response = str(response_data[0]) if response_data[0] is not None else ""
                 else:
-                    # Other tuple format - take first element
+                    # --- Other tuple format - take first element ---
                     full_response = str(response_data[0]) if len(response_data) > 0 else ""
             elif isinstance(response_data, list):
-                # List format: [full_response, visualizations] 
+                # --- List format: [full_response, visualizations] ---
                 full_response = str(response_data[0]) if len(response_data) > 0 else ""
             else:
-                # String or other format
+                # --- String or other format ---
                 full_response = str(response_data)
             
-            # Ensure we have at least an empty string
+            # --- Ensure we have at least an empty string ---
             if full_response is None:
                 full_response = ""
             
-            # Handle visualizations
+            # --- Handle visualizations ---
             if hasattr(self.current_assistant, 'visualizations') and len(self.current_assistant.visualizations) > 0:
-                # Return both text and visualizations
+                # --- Return both text and visualizations as a tuple to prevent UI crashes ---
                 return [full_response, self.current_assistant.visualizations]
             
             return full_response
@@ -158,7 +158,7 @@ class AssistantRouter:
             return f"Error: {str(e)}"
         finally:
             # =====================================================================
-            # [CRITICAL RESTORE] UNDO THE SWAP
+            # --- [CRITICAL RESTORE] UNDO THE SWAP ---
             # =====================================================================
             if hasattr(st, 'session_state') and is_truncated:
                 st.session_state.messages = real_messages_backup

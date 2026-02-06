@@ -1,0 +1,168 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 50.0,
+    "average_response_time": 11.52
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "🛡️ Insurance Risk Assessor": 50.0
+    },
+    "response_time": {
+      "🛡️ Insurance Risk Assessor": 11.52
+    },
+    "test_id": {
+      "🛡️ Insurance Risk Assessor": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "INS_01",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "I have a portfolio of 50 commercial properties in Northern California. What's my maximum probable loss for a Category 3 wildfire event, and what premium increase should I expect?",
+      "response": "As an Insurance Risk Assessor, I'd be happy to help you assess your financial exposure and liability for a Category 3 wildfire event.\n\nTo estimate the maximum probable loss (MPL) for your commercial property portfolio in Northern California, we'll need to consider several factors:\n\n1. **Location**: Northern California is a high-risk area for wildfires, with many properties located in or near areas prone to fires.\n2. **Property types**: What kind of commercial properties do you have in your portf...",
+      "response_time": 13.91,
+      "aspect_coverage": 33.3,
+      "expected_aspects": [
+        "financial estimates",
+        "policy analysis",
+        "risk mitigation"
+      ],
+      "covered_aspects": [
+        "financial estimates",
+        "policy analysis"
+      ],
+      "timestamp": "2026-02-06T22:04:23.414445",
+      "status": "completed"
+    },
+    {
+      "test_id": "INS_02",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "A client's warehouse burned down. They have business interruption coverage with a 72-hour waiting period. The fire lasted 5 days. What percentage of their lost revenue is covered?",
+      "response": "I'm so sorry to hear about the loss of your warehouse.\n\nLet's assess the situation. The business interruption coverage has a 72-hour waiting period, which means that the insurance policy will only cover losses that start after this waiting period. Since the fire lasted for 5 days, we need to calculate the number of days that fall within the waiting period and beyond.\n\nThe waiting period is 72 hours or 3 days. Since the fire started on day 1 and ended on day 5, only days 4 and 5 are covered under...",
+      "response_time": 9.12,
+      "aspect_coverage": 66.7,
+      "expected_aspects": [
+        "claims process",
+        "coverage details",
+        "financial calculation"
+      ],
+      "covered_aspects": [
+        "coverage details",
+        "financial calculation"
+      ],
+      "timestamp": "2026-02-06T22:04:32.543897",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 18.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 6.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 13.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 9.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 7.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 15.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 13.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 14.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 12.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 12.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 11.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 8.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 12.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 17.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 14.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 11.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 10.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 16.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 16.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 17.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 13.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 15.0s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 11.2s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 5.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 13.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 9.1s"
+    }
+  ],
+  "generated_at": "2026-02-06T22:04:32.548922"
+}

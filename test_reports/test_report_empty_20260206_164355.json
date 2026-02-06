@@ -1,0 +1,23 @@
+{
+  "summary": {
+    "total_tests": 0,
+    "passed_tests": 0,
+    "failed_tests": 0,
+    "success_rate": 0,
+    "average_coverage": 0,
+    "average_response_time": 0
+  },
+  "by_persona": {},
+  "detailed_results": [],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 29.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 13.2s"
+    }
+  ],
+  "generated_at": "2026-02-06T16:43:55.296053"
+}

@@ -4,7 +4,7 @@ class Prompts:
     def __init__(self):
         pass
 
-    # --- ✅ NEW HELPER: Extract text from Tuple ---
+    # --- Extract text from Tuple ---
     def _sanitize(self, response):
         """
         Safely extracts the text string if the response is a tuple (text, visuals).

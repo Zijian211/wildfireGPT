@@ -9,7 +9,7 @@ import sys
 
 def render_ai_persona_testing_tab():
     """
-    AI Persona Testing Tab - Extracted from admin_page.py
+    AI Persona Testing Tab
     """
     st.subheader("🧪 AI Persona Testing Suite")
     st.info("Run systematic tests of different personas with predefined scenarios.")
@@ -87,25 +87,29 @@ def render_ai_persona_testing_tab():
                                 scenario
                             )
                             results.append(result)
-                        
+                    
                         # --- Store results ---
                         st.session_state.test_results = results
-                        st.session_state.test_report, st.session_state.report_file = st.session_state.test_runner.generate_report()
+                    
+                        # --- Generate report with the actual results ---
+                        st.session_state.test_report, st.session_state.report_file = st.session_state.test_runner.generate_report(results)
                         st.success(f"✅ Tests completed for {selected_persona}!")
-                        
+                    
                 elif test_mode == "Comprehensive Test (All Personas)":
                     # --- Run all tests ---
                     results = st.session_state.test_runner.run_all_tests()
                     st.session_state.test_results = results
-                    st.session_state.test_report, st.session_state.report_file = st.session_state.test_runner.generate_report()
-                    st.success(f"✅ All persona tests completed! Generated report.")
                 
+                    # --- Generate report with the actual results ---
+                    st.session_state.test_report, st.session_state.report_file = st.session_state.test_runner.generate_report(results)
+                    st.success(f"✅ All persona tests completed! Generated report.")
+            
                 elif test_mode == "Specific Scenario":
                     # --- Parse scenario selection ---
                     scenario_idx = scenario_options.index(selected_scenario)
                     all_scenarios = get_all_scenarios()
                     selected_scenario_data = all_scenarios[scenario_idx]
-                    
+                
                     result = st.session_state.test_runner.run_single_test(
                         selected_scenario_data["persona"],
                         {
@@ -115,9 +119,11 @@ def render_ai_persona_testing_tab():
                         }
                     )
                     st.session_state.test_results = [result]
-                    st.session_state.test_report, st.session_state.report_file = st.session_state.test_runner.generate_report()
+                
+                    # --- Generate report with the actual result ---
+                    st.session_state.test_report, st.session_state.report_file = st.session_state.test_runner.generate_report([result])
                     st.success(f"✅ Scenario test completed!")
-            
+        
             except Exception as e:
                 st.error(f"❌ Test execution failed: {str(e)}")
                 st.code(str(e), language="python")
@@ -159,7 +165,7 @@ def render_ai_persona_testing_tab():
         
         # --- Individual Test Results ---
         st.markdown("**Individual Test Results:**")
-        for result in st.session_state.test_results:
+        for idx, result in enumerate(st.session_state.test_results):
             with st.expander(f"{result.get('test_id', 'Test')} - {result.get('persona', 'Unknown')}"):
                 col_a, col_b = st.columns(2)
                 with col_a:
@@ -172,7 +178,8 @@ def render_ai_persona_testing_tab():
                     st.write(", ".join(result.get('covered_aspects', [])))
                 
                 st.markdown("**Response Preview:**")
-                st.text_area("AI Response", result.get('response', 'No response'), height=150, key=f"resp_{result.get('test_id')}")
+                result_index = st.session_state.test_results.index(result)
+                st.text_area("AI Response", result.get('response', 'No response'), height=150, key=f"resp_{idx}")
         
         # --- Download Report ---
         # --- Check if report_file exists and is not None ---

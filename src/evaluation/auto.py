@@ -15,7 +15,7 @@ def score_sbert_similarity(text1, text2):
     if text2 is None: text2 = ""
 
     # --- 2. Safety Check: Extract Text from Tuples ---
-    # The system often returns (response_text, [list_of_images])
+    # --- The system often returns (response_text, [list_of_images]) ---
     if isinstance(text1, tuple): 
         text1 = str(text1[0])
     if isinstance(text2, tuple): 

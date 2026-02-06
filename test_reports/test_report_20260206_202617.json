@@ -1,0 +1,122 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 100.0,
+    "average_response_time": 15.04
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "🚚 Logistics Manager": 100.0
+    },
+    "response_time": {
+      "🚚 Logistics Manager": 15.04
+    },
+    "test_id": {
+      "🚚 Logistics Manager": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "LOG_01",
+      "persona": "🚚 Logistics Manager",
+      "question": "Highway 101 is closed due to wildfires. I have 20 refrigerated trucks with perishables. What's the best alternate route from San Francisco to Portland, and what's the cost impact?",
+      "response": "I'm happy to help you navigate this challenging situation.\n\nGiven the closure of Highway 101, we'll need to explore alternative routes for your refrigerated trucks carrying perishable goods from San Francisco to Portland. After analyzing various options, I recommend taking the following route:\n\n**Alternate Route:** US-101 Alternate via CA-1 and OR-38\n\n* From San Francisco, take CA-1 North towards Fort Bragg\n* Continue on CA-1 North until you reach the Oregon border\n* Take OR-38 East towards Ashl...",
+      "response_time": 13.14,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "route planning",
+        "cost analysis",
+        "timeline impact"
+      ],
+      "covered_aspects": [
+        "route planning",
+        "cost analysis",
+        "timeline impact"
+      ],
+      "timestamp": "2026-02-06T20:26:00.278942",
+      "status": "completed"
+    },
+    {
+      "test_id": "LOG_02",
+      "persona": "🚚 Logistics Manager",
+      "question": "Our distribution center is in evacuation zone. We have 48 hours to relocate $2M inventory. What's the optimal relocation strategy and insurance implications?",
+      "response": "I understand your concern as a Logistics Manager, and I'm here to help you develop an optimal relocation strategy for your $2M inventory within the given 48-hour timeframe.\n\n**Step 1: Supply Chain Disruption Risk Assessment**\nTo minimize supply chain disruptions, we need to assess the risks involved in relocating our inventory. Considering the evacuation zone, I recommend the following:\n\n* Identify critical items that cannot be delayed or compromised during relocation (e.g., perishable goods, hi...",
+      "response_time": 16.94,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "inventory management",
+        "insurance",
+        "logistical planning"
+      ],
+      "covered_aspects": [
+        "inventory management",
+        "insurance",
+        "logistical planning"
+      ],
+      "timestamp": "2026-02-06T20:26:17.221604",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 16.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 10.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 13.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 9.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 7.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 12.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 16.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 15.2s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 12.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 13.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 9.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 5.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 13.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 16.9s"
+    }
+  ],
+  "generated_at": "2026-02-06T20:26:17.226607"
+}

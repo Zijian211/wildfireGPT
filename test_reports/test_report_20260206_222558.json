@@ -1,0 +1,323 @@
+{
+  "summary": {
+    "total_tests": 10,
+    "passed_tests": 10,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 86.7,
+    "average_response_time": 12.0
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "⚡ Power Grid Operator": 100.0,
+      "🏗️ Real Estate Developer": 66.65,
+      "🏞️ Park Ranger / Tourism": 83.35,
+      "🚚 Logistics Manager": 100.0,
+      "🛡️ Insurance Risk Assessor": 83.35
+    },
+    "response_time": {
+      "⚡ Power Grid Operator": 12.96,
+      "🏗️ Real Estate Developer": 11.51,
+      "🏞️ Park Ranger / Tourism": 11.05,
+      "🚚 Logistics Manager": 13.3,
+      "🛡️ Insurance Risk Assessor": 11.2
+    },
+    "test_id": {
+      "⚡ Power Grid Operator": 2,
+      "🏗️ Real Estate Developer": 2,
+      "🏞️ Park Ranger / Tourism": 2,
+      "🚚 Logistics Manager": 2,
+      "🛡️ Insurance Risk Assessor": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "INS_01",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "I have a portfolio of 50 commercial properties in Northern California. What's my maximum probable loss for a Category 3 wildfire event, and what premium increase should I expect?",
+      "response": "Thank you for providing the necessary information to complete the pre-consultation checklist.\n\n**Location:** Your portfolio consists of 50 commercial properties in Northern California, which is an area prone to wildfires.\n\n**Concern:** You're interested in assessing your maximum probable loss for a Category 3 wildfire event and the expected premium increase.\n\n**Time:** For this assessment, let's focus on short-term risk management, specifically considering recent fire events and trends in the re...",
+      "response_time": 12.04,
+      "aspect_coverage": 66.7,
+      "expected_aspects": [
+        "financial estimates",
+        "policy analysis",
+        "risk mitigation"
+      ],
+      "covered_aspects": [
+        "financial estimates",
+        "policy analysis",
+        "risk mitigation"
+      ],
+      "timestamp": "2026-02-06T22:24:00.525795",
+      "status": "completed"
+    },
+    {
+      "test_id": "INS_02",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "A client's warehouse burned down. They have business interruption coverage with a 72-hour waiting period. The fire lasted 5 days. What percentage of their lost revenue is covered?",
+      "response": "I'd be happy to help you assess the financial exposure and liability associated with your client's warehouse fire.\n\nTo determine the percentage of lost revenue that is covered, we'll need to analyze the business interruption policy details. According to your policy, there is a 72-hour waiting period before coverage kicks in. Since the fire lasted for 5 days, the waiting period has already been exceeded.\n\nAssuming the policy provides coverage for loss of business income due to physical damage to ...",
+      "response_time": 10.35,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "claims process",
+        "coverage details",
+        "financial calculation"
+      ],
+      "covered_aspects": [
+        "claims process",
+        "coverage details",
+        "financial calculation"
+      ],
+      "timestamp": "2026-02-06T22:24:11.902004",
+      "status": "completed"
+    },
+    {
+      "test_id": "PWR_01",
+      "persona": "⚡ Power Grid Operator",
+      "question": "We're planning PSPS (Public Safety Power Shutoff) for next week with 40mph winds forecasted. What's the minimum vegetation clearance needed for our 69kV lines, and how many customers will be affected?",
+      "response": "As a Power Grid Operator, I'd like to provide you with some technical specifications and operational protocols related to Public Safety Power Shutoff (PSPS) planning.\n\nFirstly, regarding vegetation clearance, the minimum clearance required for our 69kV lines is typically around 10-12 feet (3-4 meters) from the power line to any vegetation. However, this may vary depending on the specific line configuration, terrain, and weather conditions.\n\nIn the case of 40mph winds forecasted for next week, we...",
+      "response_time": 12.37,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "technical specifications",
+        "customer impact",
+        "safety protocols"
+      ],
+      "covered_aspects": [
+        "technical specifications",
+        "customer impact",
+        "safety protocols"
+      ],
+      "timestamp": "2026-02-06T22:24:25.283567",
+      "status": "completed"
+    },
+    {
+      "test_id": "PWR_02",
+      "persona": "⚡ Power Grid Operator",
+      "question": "A substation is in Red Flag warning area. Should we de-energize proactively? What's the cost-benefit of 24-hour outage vs. wildfire liability?",
+      "response": "I understand your concern about the substation located in a Red Flag warning area. As a Power Grid Operator, my primary focus is on ensuring the reliability and safety of our grid infrastructure.\n\nBefore we discuss de-energizing the substation proactively, let's review some key technical specifications:\n\n* The substation in question has a capacity rating of 230 kV and serves approximately 50,000 customers in the surrounding area.\n* Our grid architecture includes a combination of overhead transmi...",
+      "response_time": 13.55,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "risk assessment",
+        "cost analysis",
+        "operational decision"
+      ],
+      "covered_aspects": [
+        "risk assessment",
+        "cost analysis",
+        "operational decision"
+      ],
+      "timestamp": "2026-02-06T22:24:39.845728",
+      "status": "completed"
+    },
+    {
+      "test_id": "LOG_01",
+      "persona": "🚚 Logistics Manager",
+      "question": "Highway 101 is closed due to wildfires. I have 20 refrigerated trucks with perishables. What's the best alternate route from San Francisco to Portland, and what's the cost impact?",
+      "response": "I understand your concern about the highway closure due to wildfires affecting your supply chain. As a Logistics Manager, my goal is to minimize disruptions and ensure timely delivery of your perishable goods.\n\n**Alternate Route Proposal:**\nConsidering the Highway 101 closure, I recommend an alternate route from San Francisco to Portland:\n\n1. From San Francisco, take US-101 North towards Sacramento.\n2. Merge onto I-5 North towards Redding.\n3. Continue on I-5 North through California and into Ore...",
+      "response_time": 12.26,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "route planning",
+        "cost analysis",
+        "timeline impact"
+      ],
+      "covered_aspects": [
+        "route planning",
+        "cost analysis",
+        "timeline impact"
+      ],
+      "timestamp": "2026-02-06T22:24:53.134898",
+      "status": "completed"
+    },
+    {
+      "test_id": "LOG_02",
+      "persona": "🚚 Logistics Manager",
+      "question": "Our distribution center is in evacuation zone. We have 48 hours to relocate $2M inventory. What's the optimal relocation strategy and insurance implications?",
+      "response": "Thank you for reaching out! As a Logistics Manager, I'll provide a comprehensive plan to ensure the safe relocation of your $2M inventory within the given timeframe.\n\n**Assessment:**\n\n1. **Supply chain disruption risk assessment:** Our primary concern is relocating the inventory from the evacuation zone to a safer location. We need to assess the potential risks and disruptions in our supply chain.\n2. **Alternate routing and transportation planning:** I recommend identifying alternative routes fo...",
+      "response_time": 14.35,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "inventory management",
+        "insurance",
+        "logistical planning"
+      ],
+      "covered_aspects": [
+        "inventory management",
+        "insurance",
+        "logistical planning"
+      ],
+      "timestamp": "2026-02-06T22:25:08.521528",
+      "status": "completed"
+    },
+    {
+      "test_id": "RE_01",
+      "persona": "🏗️ Real Estate Developer",
+      "question": "We're developing a 200-home subdivision in a high-fire-risk zone. What fire-resistant building materials should we use to meet California's Chapter 7A requirements, and what's the cost premium?",
+      "response": "Thank you for sharing your project details with me. To ensure compliance with California's Chapter 7A requirements for wildfire-resistant construction in high-risk zones, I'll outline some essential fire-resistant building materials and their associated costs.\n\n**Building Materials:**\n\n1. **Exterior Walls:** Use non-combustible materials like:\n\t* Fire-resistant stucco (approx. $3.50 - $5.00 per sq. ft.)\n\t* Fiber-cement siding (approx. $2.50 - $4.00 per sq. ft.)\n\t* Brick or concrete masonry units...",
+      "response_time": 14.76,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "building codes",
+        "material costs",
+        "compliance"
+      ],
+      "covered_aspects": [
+        "building codes",
+        "material costs",
+        "compliance"
+      ],
+      "timestamp": "2026-02-06T22:25:24.297811",
+      "status": "completed"
+    },
+    {
+      "test_id": "RE_02",
+      "persona": "🏗️ Real Estate Developer",
+      "question": "Our construction timeline is delayed 60 days due to fire season. What are the financial penalties from buyers, and can we claim force majeure?",
+      "response": "Thank you for sharing this information with me! I'd like to clarify a few things before we proceed.\n\n**Location:** Are we discussing a specific location or region that's particularly prone to wildfires?\n\n**Concern:** Since our construction timeline is delayed due to fire season, what are the primary concerns of your buyers regarding this delay? Is it mainly related to financial penalties, inconvenience, or something else?\n\n**Time:** As you mentioned, our timeline has been delayed by 60 days. Are...",
+      "response_time": 8.26,
+      "aspect_coverage": 33.3,
+      "expected_aspects": [
+        "financial impact",
+        "contract law",
+        "risk management"
+      ],
+      "covered_aspects": [
+        "financial impact"
+      ],
+      "timestamp": "2026-02-06T22:25:33.584572",
+      "status": "completed"
+    },
+    {
+      "test_id": "PARK_01",
+      "persona": "🏞️ Park Ranger / Tourism",
+      "question": "We have 500 campers in a national park with approaching wildfire. What's the evacuation protocol, and how do we communicate with visitors who don't speak English?",
+      "response": "Thank you for reaching out to us as Park Ranger/ Tourism Manager. I'm happy to assist you with your concerns.\n\nFirstly, our top priority is visitor safety. In the event of a wildfire approaching the national park, we have an evacuation protocol in place to ensure the safe departure of all visitors.\n\nFor the 500 campers currently in the park, we would implement the following steps:\n\n1. **Evacuation Route Identification**: Our team will identify the safest and most efficient evacuation routes, tak...",
+      "response_time": 14.79,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "safety protocols",
+        "communication",
+        "visitor management"
+      ],
+      "covered_aspects": [
+        "safety protocols",
+        "communication",
+        "visitor management"
+      ],
+      "timestamp": "2026-02-06T22:25:49.403846",
+      "status": "completed"
+    },
+    {
+      "test_id": "PARK_02",
+      "persona": "🏞️ Park Ranger / Tourism",
+      "question": "A 2-week park closure during peak season costs us $250,000 in lost revenue. What insurance covers this, and what's our deductible?",
+      "response": "Thank you for reaching out to me as a Park Ranger/ Tourism Manager. I'd be happy to help you with your question.\n\nRegarding the insurance coverage for lost revenue due to park closures, I'd like to clarify that our park's insurance policy does cover losses related to unexpected events such as wildfires. Our policy specifically covers business interruption and loss of revenue resulting from unforeseen circumstances like natural disasters.\n\nAs for the deductible, it's $50,000 per event. However, p...",
+      "response_time": 7.31,
+      "aspect_coverage": 66.7,
+      "expected_aspects": [
+        "financial impact",
+        "insurance",
+        "revenue protection"
+      ],
+      "covered_aspects": [
+        "financial impact",
+        "insurance"
+      ],
+      "timestamp": "2026-02-06T22:25:57.724889",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 7.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 11.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 10.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 9.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 12.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 13.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 13.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 13.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 17.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 12.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 12.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 10.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 12.0s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 10.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 12.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 13.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 12.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 14.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 14.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 8.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 14.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 7.3s"
+    }
+  ],
+  "generated_at": "2026-02-06T22:25:58.737059"
+}

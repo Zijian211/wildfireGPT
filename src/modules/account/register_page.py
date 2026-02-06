@@ -8,7 +8,7 @@ def render_register_page():
     """
     st.markdown("### 📝 Create New Account")
     
-    # Back Button
+    # --- Back Button ---
     if st.button("← Back to Login"):
         st.session_state.auth_mode = 'login'
         st.rerun()
@@ -19,7 +19,7 @@ def render_register_page():
     with st.container():
         new_user = st.text_input("New Username", key="reg_user")
         new_pass = st.text_input("New Password", type="password", key="reg_pass")
-        # ADDED: Password Confirmation
+        # --- Password Confirmation Field ---
         confirm_pass = st.text_input("Confirm Password", type="password", key="reg_pass_confirm")
     
     st.markdown("---")
@@ -30,16 +30,16 @@ def render_register_page():
     
     q_lib = auth.SECURITY_QUESTIONS_LIBRARY
     
-    # Question 1
+    # --- Question 1 ---
     q1 = st.selectbox("Question 1", q_lib, index=0)
     a1 = st.text_input("Answer 1", type="password", help="Answers are case-insensitive.")
     
-    # Question 2 (Exclude selected)
+    # --- Question 2 (Exclude selected) ---
     q2_opts = [q for q in q_lib if q != q1]
     q2 = st.selectbox("Question 2", q2_opts, index=0 if len(q2_opts)>0 else 0)
     a2 = st.text_input("Answer 2", type="password")
     
-    # Question 3
+    # --- Question 3 ---
     q3_opts = [q for q in q_lib if q not in [q1, q2]]
     q3 = st.selectbox("Question 3", q3_opts, index=0 if len(q3_opts)>0 else 0)
     a3 = st.text_input("Answer 3", type="password")
@@ -77,7 +77,7 @@ def render_register_page():
             if auth.save_user(new_user, new_pass, sec_data):
                 st.success("✅ Account created successfully!")
                 st.balloons()
-                # Redirect to login
+                # --- Redirect to login ---
                 st.session_state.auth_mode = 'login'
                 st.rerun()
             else:

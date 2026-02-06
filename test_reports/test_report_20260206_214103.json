@@ -1,0 +1,74 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 83.4,
+    "average_response_time": 12.45
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "🛡️ Insurance Risk Assessor": 83.35
+    },
+    "response_time": {
+      "🛡️ Insurance Risk Assessor": 12.45
+    },
+    "test_id": {
+      "🛡️ Insurance Risk Assessor": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "INS_01",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "I have a portfolio of 50 commercial properties in Northern California. What's my maximum probable loss for a Category 3 wildfire event, and what premium increase should I expect?",
+      "response": "Based on your portfolio of 50 commercial properties in Northern California, I'll provide an estimate of the maximum probable loss for a Category 3 wildfire event.\n\n**Financial Exposure Assessment:**\n\n1. **Property Valuation:** The total value of your 50 commercial properties is estimated to be $200 million.\n2. **Loss Calculation:** For a Category 3 wildfire event, the average loss per property can range from 10% to 20% of its value, considering the severity of the fire and the proximity of the p...",
+      "response_time": 18.06,
+      "aspect_coverage": 66.7,
+      "expected_aspects": [
+        "financial estimates",
+        "policy analysis",
+        "risk mitigation"
+      ],
+      "covered_aspects": [
+        "financial estimates",
+        "policy analysis",
+        "risk mitigation"
+      ],
+      "timestamp": "2026-02-06T21:40:57.095845",
+      "status": "completed"
+    },
+    {
+      "test_id": "INS_02",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "A client's warehouse burned down. They have business interruption coverage with a 72-hour waiting period. The fire lasted 5 days. What percentage of their lost revenue is covered?",
+      "response": "I'm so sorry to hear about the loss.\n\nAs an Insurance Risk Assessor, I'd like to help you understand the coverage and potential losses.\n\nFrom what you've shared, it seems that your client has business interruption (BI) coverage with a 72-hour waiting period. This means that they won't be covered for the first 3 days of the event (fire in this case).\n\nThe fire lasted 5 days, which means your client will only be covered for 2 days of lost revenue (5 - 3 = 2). To calculate the percentage of lost re...",
+      "response_time": 6.85,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "claims process",
+        "coverage details",
+        "financial calculation"
+      ],
+      "covered_aspects": [
+        "claims process",
+        "coverage details",
+        "financial calculation"
+      ],
+      "timestamp": "2026-02-06T21:41:03.963067",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 18.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 6.9s"
+    }
+  ],
+  "generated_at": "2026-02-06T21:41:03.974068"
+}

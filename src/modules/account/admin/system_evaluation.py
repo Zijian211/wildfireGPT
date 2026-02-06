@@ -11,7 +11,7 @@ from src.evaluation.eval_offline import Evaluator
 from src.modules.database.profile_manager import extract_profession_from_persona
 
 # ==========================================
-# --- THE DEBUG DOCTOR (File System Fixer) ---
+# --- THE DEBUG DOCTOR ---
 # ==========================================
 def diagnose_and_clean(folder_path):
     """

@@ -65,7 +65,8 @@ class PersonaTestRunner:
             print(f"✅ Assistant initialized: {type(assistant).__name__}")
         except Exception as e:
             print(f"❌ Failed to initialize assistant: {e}")
-            return self._create_error_result(test_scenario, persona, f"Assistant init failed: {e}")
+            error_result = self._create_error_result(test_scenario, persona, f"Assistant init failed: {e}")
+            return error_result
     
         # --- Build enhanced prompt (SAFE UNPACKING) ---
         try:
@@ -75,13 +76,13 @@ class PersonaTestRunner:
             )
             self._debug_diagnose_unpacking("build_enhanced_prompt", prompt_result)
             
-            # SAFE UNPACKING: Handle all possible return formats
+            # --- Handle all possible return formats ---
             final_prompt = test_scenario["question"]
             badges = []
             
             if isinstance(prompt_result, tuple):
                 if len(prompt_result) >= 2:
-                    # Standard format: (final_prompt, badges)
+                    # --- Standard format: (final_prompt, badges) ---
                     final_prompt, badges = prompt_result[0], prompt_result[1]
                 elif len(prompt_result) == 1:
                     # Only prompt returned
@@ -89,7 +90,7 @@ class PersonaTestRunner:
                 else:
                     print(f"⚠️ Empty tuple from build_enhanced_prompt")
             else:
-                # Not a tuple, assume it's just the prompt
+                # --- Not a tuple, assume it's just the prompt ---
                 final_prompt = prompt_result
                 
             print(f"📤 Final prompt length: {len(final_prompt)} chars")
@@ -105,31 +106,31 @@ class PersonaTestRunner:
             raw_response = assistant.get_assistant_response(final_prompt)
             response_time = time.time() - start_time
             
-            # DEBUG: Check what get_assistant_response returns
+            # --- DEBUG: Check what get_assistant_response returns ---
             self._debug_diagnose_unpacking("get_assistant_response", raw_response)
         
             # --- SAFE RESPONSE EXTRACTION (HANDLES ALL FORMATS) ---
             response_text = ""
             
-            # CASE 1: String response
+            # --- CASE 1: String response ---
             if isinstance(raw_response, str):
                 response_text = raw_response
                 
-            # CASE 2: List response [text, visualizations]
+            # --- CASE 2: List response [text, visualizations] ---
             elif isinstance(raw_response, list):
                 if len(raw_response) > 0:
                     response_text = str(raw_response[0])
                 else:
                     response_text = "Empty list response"
                     
-            # CASE 3: Tuple response (text, run_id, tool_outputs)
+            # --- CASE 3: Tuple response (text, run_id, tool_outputs) ---
             elif isinstance(raw_response, tuple):
                 if len(raw_response) > 0:
                     response_text = str(raw_response[0])
                 else:
                     response_text = "Empty tuple response"
                     
-            # CASE 4: Other types
+            # --- CASE 4: Other types ---
             else:
                 response_text = str(raw_response)
                 
@@ -164,11 +165,12 @@ class PersonaTestRunner:
         except Exception as e:
             error_msg = f"Test execution failed: {str(e)}\n{traceback.format_exc()}"
             print(f"❌ {error_msg}")
+            error_result = self._create_error_result(test_scenario, persona, error_msg)
             self.test_log.append({
                 "type": "error",
                 "message": f"❌ Test {test_scenario['id']} failed: {str(e)}"
             })
-            return self._create_error_result(test_scenario, persona, error_msg)
+            return error_result
     
     def _create_error_result(self, test_scenario, persona, error_msg):
         """Create error result for failed tests"""
@@ -233,7 +235,7 @@ class PersonaTestRunner:
                 else:
                     print(f"   ❌ Missed: {aspect}")
             else:
-                # Check if aspect name appears in response
+                # --- Check if aspect name appears in response ---
                 aspect_lower = aspect.lower()
                 if aspect_lower in response_text:
                     covered += 1
@@ -285,7 +287,7 @@ class PersonaTestRunner:
                 if any(keyword in response_text for keyword in keywords):
                     covered.append(aspect)
             else:
-                # Check direct match
+                # --- Check direct match ---
                 if aspect.lower() in response_text:
                     covered.append(aspect)
         
@@ -303,6 +305,7 @@ class PersonaTestRunner:
         
         for idx, scenario in enumerate(all_scenarios, 1):
             print(f"\n🔬 Test {idx}/{len(all_scenarios)}: {scenario['persona']} - {scenario['id']}")
+            # --- Capture the returned result and store it ---
             result = self.run_single_test(
                 scenario["persona"],
                 {
@@ -311,7 +314,7 @@ class PersonaTestRunner:
                     "expected_aspects": scenario["expected_aspects"]
                 }
             )
-            self.results.append(result)
+            self.results.append(result)  # --- Store the returned result ---
             time.sleep(1)  # --- Rate limiting ---
         
         print(f"\n✅ All tests completed: {len(self.results)} results")
@@ -347,21 +350,28 @@ class PersonaTestRunner:
         
         return self.run_single_test(persona, scenarios[0])
     
-    def generate_report(self):
+    def generate_report(self, results=None):
         """
-        Generate test report
+        Generate test report - FIXED to use provided results or self.results
         """
         print("📄 Generating test report...")
-        if not self.results:
-            print("⚠️ No test results available")
-            # Return a default report file path instead of just a string
+        
+        # --- Use provided results if available, otherwise use self.results ---
+        if results is not None:
+            report_results = results
+        else:
+            report_results = self.results
+            
+        if not report_results:
+            print("⚠️ No test results available for report")
+            # --- Return a default report file path instead of just a string ---
             report_dir = "test_reports"
             if not os.path.exists(report_dir):
                 os.makedirs(report_dir)
             
             report_file = os.path.join(report_dir, f"test_report_empty_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
             
-            # Create an empty report
+            # --- Create an empty report ---
             report = {
                 "summary": {
                     "total_tests": 0,
@@ -383,7 +393,7 @@ class PersonaTestRunner:
             print(f"✅ Empty report saved to: {report_file}")
             return report, report_file
         
-        df = pd.DataFrame(self.results)
+        df = pd.DataFrame(report_results)
         
         # --- Calculate metrics ---
         total_tests = len(df)
@@ -411,7 +421,7 @@ class PersonaTestRunner:
                 "average_response_time": round(avg_response_time, 2)
             },
             "by_persona": persona_stats,
-            "detailed_results": self.results,
+            "detailed_results": report_results,
             "test_log": self.test_log,
             "generated_at": datetime.now().isoformat()
         }

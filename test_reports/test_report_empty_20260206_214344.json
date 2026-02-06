@@ -1,0 +1,63 @@
+{
+  "summary": {
+    "total_tests": 0,
+    "passed_tests": 0,
+    "failed_tests": 0,
+    "success_rate": 0,
+    "average_coverage": 0,
+    "average_response_time": 0
+  },
+  "by_persona": {},
+  "detailed_results": [],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 18.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 6.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 13.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 9.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 7.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 15.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 13.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 14.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 12.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 12.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 11.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 8.8s"
+    }
+  ],
+  "generated_at": "2026-02-06T21:43:44.171590"
+}

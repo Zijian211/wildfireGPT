@@ -1,8 +1,9 @@
+"""
+Test Scenarios for Commercial Personas (Thursday Task)
+5 distinctive test cases for each business persona
+"""
+
 TEST_SCENARIOS = {
-    """
-    Test Scenarios for Commercial Personas (Thursday Task)
-    5 distinctive test cases for each business persona
-    """
     "🛡️ Insurance Risk Assessor": [
         {
             "id": "INS_01",

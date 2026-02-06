@@ -220,46 +220,44 @@ def parse_current_entry(entry, aspect):
 
 def convert_scores(input_score, aspect):
     # --- FIX FOR CLOUD/LLAMA-3: CLEAN MARKDOWN ---
-    # Llama-3 often wraps output in ```python ... ```
+    # --- Llama-3 often wraps output in ```python ... ``` ---
     input_score = re.sub(r"```python", "", str(input_score)) # Ensure string input
     input_score = re.sub(r"```", "", input_score).strip()
     # ---------------------------------------------
 
-    # Regular expression to match all reasoning blocks
+    # --- Regular expression to match all reasoning blocks ---
     print(f"{PURPLE}response{ENDC}", input_score)
     reasonings = re.findall(r'\(\d+\)\s+(.*?)\n\n', input_score, re.DOTALL)
     
-    # Fallback: if regex finds nothing (e.g. Llama-3 wrote an essay), use the whole text as reasoning
+    # --- Fallback: if regex finds nothing (e.g. Llama-3 wrote an essay), use the whole text as reasoning ---
     if not reasonings:
         reasonings = [str(input_score)]
 
-    # Check if input_score is a string that contains a list or tuple structure
+    # --- Check if input_score is a string that contains a list or tuple structure ---
     if isinstance(input_score, str) and ("[" in input_score or "(" in input_score):
-        # Clean up string if necessary
+        # --- Clean up string if necessary ---
         if "[" in input_score and "]" in input_score:
             input_score = input_score[input_score.index("["):input_score.rindex("]") + 1]
         
         try:
-            # Try to convert the input string to a list/tuple directly
+            # --- Try to convert the input string to a list/tuple directly ---
             input_score = ast.literal_eval(input_score)
         except (ValueError, SyntaxError):
-            # Fallback formatting
+            # --- Fallback formatting ---
             input_score = re.sub(r"(?<=\[|\s|,)([^\\d\\[\\]'\"].*?)(?=,|\])", r"'\1'", input_score)
             try:
                 input_score = ast.literal_eval(input_score)
             except (ValueError, SyntaxError) as e:
                 print(f"Error in converting input_score: {e}")
-                # --- CRITICAL FIX: Return a tuple (list, string) to prevent crash ---
-                # We return a list of "Error" so the UI displays it safely
+                # --- Return a tuple (list, string) to prevent crash ---
                 return ["Error Parsing"], str(input_score)
 
     # --- CRITICAL FIX START ---
-    # If it is a tuple, convert it to a list so we can modify it later
+    # --- If it is a tuple, convert it to a list so we can modify it later ---
     if isinstance(input_score, tuple):
         input_score = list(input_score)
-    # --- CRITICAL FIX END ---
 
-    # print the type of input_score to debug
+    # --- print the type of input_score to debug ---
     print(f"{PURPLE}input_score{ENDC}", input_score)
 
     if aspect in ['correctness']:
@@ -271,12 +269,12 @@ def convert_scores(input_score, aspect):
         return matches, reasonings, total, 0, input_score
 
     else:
-        # 1. Handle Accessibility logic (3 items) - NOW SAFE because it is a list
+        # --- 1. Handle Accessibility logic (3 items) - NOW SAFE because it is a list ---
         if isinstance(input_score, list) and len(input_score) == 3:
             for i in [0, 2]:
                 input_score[i] = 'No' if input_score[i] == 'Yes' else 'Yes'
         
-        # 2. Handle Single Item List
+        # --- 2. Handle Single Item List ---
         if isinstance(input_score, list) and len(input_score) == 1:
             input_score = input_score[0]
             

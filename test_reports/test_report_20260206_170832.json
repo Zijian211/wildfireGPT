@@ -1,0 +1,82 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 83.4,
+    "average_response_time": 9.86
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "🛡️ Insurance Risk Assessor": 83.35
+    },
+    "response_time": {
+      "🛡️ Insurance Risk Assessor": 9.86
+    },
+    "test_id": {
+      "🛡️ Insurance Risk Assessor": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "INS_01",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "I have a portfolio of 50 commercial properties in Northern California. What's my maximum probable loss for a Category 3 wildfire event, and what premium increase should I expect?",
+      "response": "Thank you for providing the necessary information. To better assist you, I'll need to ask some questions.\n\n**Location:** Northern California is a high-risk area for wildfires. Can you please specify the exact locations of your commercial properties?\n\n**Concern:** You're interested in assessing the maximum probable loss and premium increase for a Category 3 wildfire event. Is that correct?\n\n**Time:** For this analysis, I'll assume we're focusing on the short-term risk management aspect (1-10 year...",
+      "response_time": 8.94,
+      "aspect_coverage": 66.7,
+      "expected_aspects": [
+        "financial estimates",
+        "policy analysis",
+        "risk mitigation"
+      ],
+      "covered_aspects": [
+        "financial estimates",
+        "policy analysis",
+        "risk mitigation"
+      ],
+      "timestamp": "2026-02-06T17:08:21.650999",
+      "status": "completed"
+    },
+    {
+      "test_id": "INS_02",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "A client's warehouse burned down. They have business interruption coverage with a 72-hour waiting period. The fire lasted 5 days. What percentage of their lost revenue is covered?",
+      "response": "I'm so sorry to hear about the loss of your warehouse.\n\nLet's assess the situation and calculate the coverage for your client.\n\nAccording to the policy, there's a 72-hour waiting period before business interruption coverage kicks in. Since the fire lasted 5 days, that means only 33 hours (5 days - 3 days = 2 days) are covered under the business interruption clause.\n\nThe policy likely has a specific wording, but as an example, let's assume the policy covers 75% of lost revenue during the waiting ...",
+      "response_time": 10.78,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "claims process",
+        "coverage details",
+        "financial calculation"
+      ],
+      "covered_aspects": [
+        "claims process",
+        "coverage details",
+        "financial calculation"
+      ],
+      "timestamp": "2026-02-06T17:08:32.451804",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 16.0s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 17.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 8.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 10.8s"
+    }
+  ],
+  "generated_at": "2026-02-06T17:08:32.463589"
+}

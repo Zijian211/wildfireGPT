@@ -5,7 +5,6 @@ import re
 
 def extract_profession_from_persona(persona):
     """Extracts standardized profession from persona string."""
-    # Simple text check without emojis
     if "Emergency Commander" in persona:
         return "Emergency Commander (Government)"
     elif "Insurance Risk Assessor" in persona:
@@ -21,7 +20,7 @@ def extract_profession_from_persona(persona):
     elif "Other Careers" in persona:
         return "Other Professional"
     else:
-        # Remove emojis and extra characters
+        # --- Remove emojis and extra characters for unknown professions ---
         import re
         return re.sub(r'[^\w\s\-\(\)]', '', persona).strip()
 
@@ -35,15 +34,15 @@ def save_user_profile_for_evaluation(username, persona, lat, lon, concern="", ti
     
     profile_path = os.path.join(profile_dir, f"{username}_eval_profile.json")
     
-    # Remove emojis from persona for text storage
+    # --- Remove emojis from persona for text storage ---
     import re
-    # Simple emoji removal
+    # --- Simple emoji removal ---
     persona_no_emoji = re.sub(r'[^\w\s\-\(\)]', '', persona).strip()
     
     profile_data = {
         "username": username,
-        "persona": persona,  # Keep original
-        "persona_clean": persona_no_emoji,  # Without emojis
+        "persona": persona,
+        "persona_clean": persona_no_emoji,
         "location": {
             "lat": lat,
             "lon": lon
@@ -54,11 +53,11 @@ def save_user_profile_for_evaluation(username, persona, lat, lon, concern="", ti
         "created_at": datetime.datetime.now().isoformat()
     }
     
-    # Save JSON with UTF-8 (handles emojis)
+    # --- Save JSON with UTF-8 (handles emojis) ---
     with open(profile_path, "w", encoding="utf-8") as f:
         json.dump(profile_data, f, indent=2, ensure_ascii=False)
     
-    # Also create a text version WITHOUT emojis
+    # --- Also create a text version WITHOUT emojis for easier reading in evaluation ---
     text_profile_path = os.path.join(profile_dir, f"{username}_profile.txt")
     
     with open(text_profile_path, "w", encoding="utf-8") as f:

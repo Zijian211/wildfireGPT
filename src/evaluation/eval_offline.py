@@ -41,7 +41,7 @@ class Evaluator:
         
         # ---Normalize path for Windows Localhost ---
         raw_case = args.get('case_folder')
-        # This combines mixed slashes in Cloud/Localhost paths
+        # --- This combines mixed slashes in Cloud/Localhost paths into a consistent format ---
         if raw_case:
             self.case = os.path.normpath(raw_case) 
         else:
@@ -125,11 +125,11 @@ class Evaluator:
 
                         # --- Create a standardized entry object ---
                         item = {
-                            "tool_outputs": "Direct Chat (No Tools)", # Placeholder
+                            "tool_outputs": "Direct Chat (No Tools)", # --- Placeholder ---
                             "llm_response": entry.get('content', ''),
                             "previous_query": prev_query,
                             "type": "general",
-                            "current_entry": entry # Used for human_score parsing
+                            "current_entry": entry # --- Used for human_score parsing ---
                         }
                         parsed_data.append(item)
                 

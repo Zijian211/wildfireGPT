@@ -19,10 +19,8 @@ def render_sidebar():
         st.caption(f"👤 User: **{st.session_state.username}**")
         
         # =========================================================
-        # --- LOGIC GATE: HIDE CONTROLS UNTIL LOCATION CONFIRMED ---
+        # --- HIDE CONTROLS UNTIL LOCATION CONFIRMED ---
         # =========================================================
-        # We only show the Business Context controls if the user has 
-        # finished the "Map Phase" (Step 1).
         if st.session_state.get("location_confirmed", False):
             
             st.divider()
@@ -35,7 +33,7 @@ def render_sidebar():
             # --- 1.1 Persona Selector ---
             current_persona = st.session_state.get("user_persona", "👨‍🚒 Emergency Commander (Gov)")
             
-            # Track previous persona to detect changes
+            # --- Track previous persona to detect changes ---
             if "previous_persona" not in st.session_state:
                 st.session_state.previous_persona = current_persona
 

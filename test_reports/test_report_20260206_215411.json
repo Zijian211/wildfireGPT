@@ -1,0 +1,122 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 100.0,
+    "average_response_time": 15.0
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "🚚 Logistics Manager": 100.0
+    },
+    "response_time": {
+      "🚚 Logistics Manager": 15.0
+    },
+    "test_id": {
+      "🚚 Logistics Manager": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "LOG_01",
+      "persona": "🚚 Logistics Manager",
+      "question": "Highway 101 is closed due to wildfires. I have 20 refrigerated trucks with perishables. What's the best alternate route from San Francisco to Portland, and what's the cost impact?",
+      "response": "I understand your concern about the supply chain disruption caused by the highway closure. As a Logistics Manager, my goal is to provide an effective solution.\n\n**Alternate Route:** Given the closure of Highway 101, I recommend taking Alternate Route 1: US-101 North from San Francisco to Garberville, then connect to CA-255 West to US-199 South to OR-138 East to I-5 North to Portland. This route will add approximately 2 hours and 30 minutes to the original travel time.\n\n**Cost Impact:** To estima...",
+      "response_time": 12.57,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "route planning",
+        "cost analysis",
+        "timeline impact"
+      ],
+      "covered_aspects": [
+        "route planning",
+        "cost analysis",
+        "timeline impact"
+      ],
+      "timestamp": "2026-02-06T21:53:54.342062",
+      "status": "completed"
+    },
+    {
+      "test_id": "LOG_02",
+      "persona": "🚚 Logistics Manager",
+      "question": "Our distribution center is in evacuation zone. We have 48 hours to relocate $2M inventory. What's the optimal relocation strategy and insurance implications?",
+      "response": "Thank you for reaching out. I understand the urgency of the situation, and I'm happy to help.\n\n**Location:** Our distribution center is located in an evacuation zone, which requires immediate attention to ensure the safety of our employees and products.\n\n**Concern:** Relocating $2M inventory within 48 hours while minimizing disruption to our supply chain and ensuring insurance coverage.\n\n**Time:** We have a 48-hour window to relocate the inventory. I will outline a plan that takes into account t...",
+      "response_time": 17.43,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "inventory management",
+        "insurance",
+        "logistical planning"
+      ],
+      "covered_aspects": [
+        "inventory management",
+        "insurance",
+        "logistical planning"
+      ],
+      "timestamp": "2026-02-06T21:54:11.781457",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 18.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 6.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 13.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 9.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 7.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 15.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 13.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 14.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 12.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 12.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 11.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 8.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 12.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 17.4s"
+    }
+  ],
+  "generated_at": "2026-02-06T21:54:11.785470"
+}

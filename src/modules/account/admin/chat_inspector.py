@@ -5,7 +5,7 @@ import glob
 
 def render_chat_inspector_tab():
     """
-    Chat Inspector Tab - Extracted from admin_page.py
+    Chat Inspector Tab
     """
     st.subheader("🔍 Inspect User Sessions")
     st.info("View user chat history safely (Maps/Images are hidden to prevent crashes).")

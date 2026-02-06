@@ -1,0 +1,74 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 100.0,
+    "average_response_time": 16.84
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "⚡ Power Grid Operator": 100.0
+    },
+    "response_time": {
+      "⚡ Power Grid Operator": 16.84
+    },
+    "test_id": {
+      "⚡ Power Grid Operator": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "PWR_01",
+      "persona": "⚡ Power Grid Operator",
+      "question": "We're planning PSPS (Public Safety Power Shutoff) for next week with 40mph winds forecasted. What's the minimum vegetation clearance needed for our 69kV lines, and how many customers will be affected?",
+      "response": "Thank you for reaching out. As a Power Grid Operator, I'd be happy to provide you with some critical information regarding PSPS protocols and infrastructure vulnerability assessment.\n\nFor your 69kV lines, the minimum vegetation clearance recommended by industry standards is typically around 10-12 feet (3-4 meters) from the conductor to the ground level. However, this can vary depending on the specific line design, terrain, and local regulations. It's essential to assess the condition of the vege...",
+      "response_time": 15.96,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "technical specifications",
+        "customer impact",
+        "safety protocols"
+      ],
+      "covered_aspects": [
+        "technical specifications",
+        "customer impact",
+        "safety protocols"
+      ],
+      "timestamp": "2026-02-06T17:06:23.649039",
+      "status": "completed"
+    },
+    {
+      "test_id": "PWR_02",
+      "persona": "⚡ Power Grid Operator",
+      "question": "A substation is in Red Flag warning area. Should we de-energize proactively? What's the cost-benefit of 24-hour outage vs. wildfire liability?",
+      "response": "Thank you for the question! As a Power Grid Operator, I'd be happy to provide some insights on this topic.\n\nWhen it comes to substation infrastructure located in an area under Red Flag warning conditions, our primary concern is always public safety and minimizing potential risks to both people and property. In this case, proactive de-energization of the substation might be a consideration.\n\nTo assess the feasibility of proactive de-energization, we'd need to consider several factors:\n\n1. **Grid ...",
+      "response_time": 17.73,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "risk assessment",
+        "cost analysis",
+        "operational decision"
+      ],
+      "covered_aspects": [
+        "risk assessment",
+        "cost analysis",
+        "operational decision"
+      ],
+      "timestamp": "2026-02-06T17:06:41.402225",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 16.0s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 17.7s"
+    }
+  ],
+  "generated_at": "2026-02-06T17:06:41.421225"
+}

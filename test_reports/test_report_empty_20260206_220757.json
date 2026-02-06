@@ -1,0 +1,159 @@
+{
+  "summary": {
+    "total_tests": 0,
+    "passed_tests": 0,
+    "failed_tests": 0,
+    "success_rate": 0,
+    "average_coverage": 0,
+    "average_response_time": 0
+  },
+  "by_persona": {},
+  "detailed_results": [],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 18.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 6.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 13.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 9.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 7.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 15.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 13.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 14.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 12.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 12.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 11.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 8.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 12.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 17.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 14.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 11.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 10.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 16.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 16.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 17.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 13.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 15.0s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 11.2s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 5.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 13.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 9.1s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 16.8s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 7.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 12.0s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 15.0s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 13.2s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 13.7s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_01 completed in 12.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test RE_02 completed in 16.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_01 completed in 11.6s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PARK_02 completed in 7.3s"
+    }
+  ],
+  "generated_at": "2026-02-06T22:07:57.163561"
+}

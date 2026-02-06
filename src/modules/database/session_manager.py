@@ -7,7 +7,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.assistants.assistant_router import AssistantRouter
 
-# Directory for saving sessions
+# --- Directory for saving sessions ---
 HISTORY_DIR = "chat_history"
 if not os.path.exists(HISTORY_DIR):
     os.makedirs(HISTORY_DIR)
@@ -32,16 +32,16 @@ def save_user_session(username):
     }
     
     try:
-        # Use temporary file to avoid corruption
+        # --- Use temporary file to avoid corruption on crashes ---
         temp_file = file_path + ".tmp"
         with open(temp_file, "wb") as f:
             pickle.dump(state_data, f, protocol=pickle.HIGHEST_PROTOCOL)
-        # Atomic replace
+        # --- Atomic replace to ensure file integrity ---
         os.replace(temp_file, file_path)
         print(f"✅ Session saved for {username}: {len(state_data['messages'])} messages")
     except Exception as e:
         print(f"❌ Save failed for {username}: {e}")
-        # Try one more time with basic protocol
+        # --- Try one more time with basic protocol ---
         try:
             with open(file_path, "wb") as f:
                 pickle.dump(state_data, f, protocol=2)
@@ -52,7 +52,7 @@ def load_user_session(username):
     """
     Loads data and RE-INITIALIZES the Assistant.
     """
-    # 1. Check if data is already in memory to avoid constant reloading
+    # --- 1. Check if data is already in memory to avoid constant reloading on every interaction ---
     if st.session_state.get("data_loaded", False):
         return
 
@@ -69,19 +69,18 @@ def load_user_session(username):
                 st.session_state.lat = data.get("lat", -33.8688)
                 st.session_state.lon = data.get("lon", 151.2093)
                 
-                # Restore Persona
+                # --- Restore Persona with a Default Fallback ---
                 saved_persona = data.get("user_persona", "👨‍🚒 Emergency Commander (Gov)")
                 st.session_state.user_persona = saved_persona
 
-                # --- 3. RE-CREATE Assistant (The Fix) ---
-                # We must pass the AGENT NAME (e.g., "ChecklistAssistant"), NOT the PERSONA.
-                # The Persona is handled separately by the Context Manager.
+                # --- 3. RE-CREATE Assistant ---
+                # --- Always initialize with the default Technical Agent (ChecklistAssistant) for safety and compatibility ---
                 st.session_state.assistant = AssistantRouter("ChecklistAssistant")
 
             print(f"✅ Session loaded for {username}: {len(st.session_state.messages)} messages")
             st.toast("✅ Session restored.")
         else:
-            # New User or No File
+            # --- New User or No File ---
             print(f"⚠️ No session file found for {username}, initializing defaults")
             init_defaults()
             
@@ -91,7 +90,7 @@ def load_user_session(username):
         st.error("⚠️ Session file was incompatible. Starting fresh.")
         init_defaults()
 
-    # 4. Mark as loaded
+    # --- 4. Mark as loaded ---
     st.session_state.data_loaded = True
 
 def init_defaults():
@@ -105,5 +104,5 @@ def init_defaults():
     if "user_persona" not in st.session_state:
         st.session_state.user_persona = "👨‍🚒 Emergency Commander (Gov)"
     
-    # --- Fix: Always initialize with the default Technical Agent ---
+    # --- Always initialize with the default Technical Agent ---
     st.session_state.assistant = AssistantRouter("ChecklistAssistant")
