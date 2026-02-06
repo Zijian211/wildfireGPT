@@ -22,3 +22,15 @@ Profession: Logistics Manager
 Location: Latitude -33.801973518...
 Starting llm_evaluate loop...
 Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\Ben2_live_session
+Loaded 17 interaction lines.
+Loaded 0 items from tools.txt
+Tools data empty. Falling back to Chat History parsing.
+Generated 10 evaluation items from Chat History.
+Active User Profile: User: Ben2
+Persona: Logistics Manager
+Profession: Logistics Manager
+Location: Latitude -33.801973518...
+Starting llm_evaluate loop...
+Evaluation finished successfully.

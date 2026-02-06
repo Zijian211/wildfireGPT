@@ -1,0 +1,7 @@
+User: StephenCurry
+Persona: Emergency Commander (Gov)
+Profession: Emergency Commander (Government)
+Location: Latitude -33.811102288647014, Longitude 151.00090026855472
+Concern: Switched to 👨‍🚒 Emergency Commander (Gov) mode
+Timeline: 
+Created: 2026-02-06T11:24:53.037583

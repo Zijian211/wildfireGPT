@@ -2,6 +2,7 @@ import streamlit as st
 import modules.account.auth as auth
 import modules.ui.report_generator as report
 from src.modules.ui.file_manager import FileManager
+from src.modules.ui.context_manager import PERSONA_PROMPTS
 from src.modules.database import session_manager as session_manager
 from src.modules.database.profile_manager import save_user_profile_for_evaluation
 from src.assistants.assistant_router import AssistantRouter
@@ -49,21 +50,56 @@ def render_sidebar():
                 "🎓 Other Careers (Student/Researcher...)"
             ]
 
-            # Calculate Index safely based on loaded data
+            # --- Calculate Index safely based on loaded data ---
             try:
                 default_index = persona_options.index(current_persona)
             except ValueError:
                 default_index = 0 
 
+            # --- Create tooltip summaries for each persona ---
+            persona_tooltips = {
+                "👨‍🚒 Emergency Commander (Gov)": "Focus: Evacuation planning, resource allocation, public communication",
+                "🛡️ Insurance Risk Assessor": "Focus: Financial exposure, policy coverage, risk mitigation, claims process",
+                "⚡ Power Grid Operator": "Focus: Infrastructure vulnerability, PSPS protocols, grid resilience, vegetation management",
+                "🚚 Logistics Manager": "Focus: Supply chain disruption, alternate routing, inventory management, insurance for goods",
+                "🏗️ Real Estate Developer": "Focus: Fire-resistant materials, defensible space, project delays, insurance costs",
+                "🏞️ Park Ranger / Tourism": "Focus: Visitor safety, trail closures, economic impact, educational programs",
+                "🎓 Other Careers (Student/Researcher...)": "Adapts to your specific role. Please specify your profession."
+            }
+            
+            # --- Persona selector with enhanced tooltips ---
             persona = st.selectbox(
                 "Select User Persona:",
                 persona_options,
                 index=default_index, 
                 key="persona_selector",
-                help="Select the commercial profile to adjust AI reasoning."
+                help="Hover over each option to see AI focus areas for that role",
+                format_func=lambda x: f"{x} - {persona_tooltips[x][:50]}..."
             )
             
-            # Update State & Save Immediately if Changed
+            # --- Show detailed persona information when selected ---
+            if persona in PERSONA_PROMPTS:
+                with st.expander(f"ℹ️ Further Information for {persona.split(' ')[0]}", expanded=False):
+                    prompt = PERSONA_PROMPTS[persona]
+                    
+                    # --- Extract and display focus areas ---
+                    if "Focus on:" in prompt:
+                        focus_start = prompt.find("Focus on:") + 10
+                        focus_end = prompt.find("\n\nDO:", focus_start) if "\n\nDO:" in prompt else len(prompt)
+                        focus_text = prompt[focus_start:focus_end]
+                        
+                        st.markdown("**The AI will focus on:**")
+                        lines = [line.strip() for line in focus_text.split('\n') if line.strip()]
+                        for line in lines:
+                            if line and (line[0].isdigit() or line.startswith('1.')):
+                                point = line[3:] if line[0].isdigit() else line[2:]
+                                st.markdown(f"• {point}")
+                    
+                    # --- Show full prompt in a toggle ---
+                    if st.checkbox("Show technical system prompt", key="show_tech_prompt"):
+                        st.code(prompt, language="text")
+            
+            # --- Update State & Save Immediately if Changed ---
             if persona != st.session_state.user_persona:
                 st.session_state.user_persona = persona
                 session_manager.save_user_session(st.session_state.username)
@@ -82,7 +118,7 @@ def render_sidebar():
             # --- SMART SWITCHING LOGIC (Reactive & History Preserving)
             # =========================================================
             
-            # Mapping Modes to Technical Agents
+            # --- Mapping Modes to Technical Agents ---
             target_agent = "ChecklistAssistant"
             if "Strategic Plan" in app_mode: target_agent = "PlanAssistant"
             elif "Data Analysis" in app_mode: target_agent = "AnalystAssistant"
@@ -92,7 +128,7 @@ def render_sidebar():
             if "last_app_mode" not in st.session_state:
                 st.session_state.last_app_mode = app_mode
 
-            # Check for changes in Mode OR Persona
+            # --- Check for changes in Mode OR Persona ---
             mode_changed = st.session_state.last_app_mode != app_mode
             persona_changed = st.session_state.previous_persona != persona
 
@@ -111,16 +147,16 @@ def render_sidebar():
                 
                 if "assistant" in st.session_state:
                     try:
-                        # 1. Update the AI Brain (Switch Context)
+                        # 1. --- Update the AI Brain (Switch Context) ---
                         st.session_state.assistant.update_assistant(target_agent, args={})
                         
-                        # 2. ✅ HISTORY PRESERVED: We do NOT clear st.session_state.messages.
+                        # 2. --- HISTORY PRESERVED: Without clearing st.session_state.messages ---
                         
-                        # 3. ✅ REACTIVE RESPONSE: Inject a message so the AI talks to the user
+                        # 3. --- REACTIVE RESPONSE: Inject a message so the AI talks to the user --
                         reaction_msg = ""
                         
                         if persona_changed:
-                            # Case A: User chose "Other Careers" -> Ask for details
+                            # --- Case A: User chose "Other Careers" -> Ask for details ---
                             if "Other Careers" in persona:
                                 reaction_msg = (
                                     "I see you've switched to **Other Careers**. 🎓\n\n"
@@ -128,7 +164,7 @@ def render_sidebar():
                                     "**what your specific job title or industry is?**\n"
                                     "*(e.g., 'I am a School Principal', 'I manage a large Factory', 'I am a Hospital Admin')*"
                                 )
-                            # Case B: Standard Role Switch -> Confirm focus
+                            # --- Case B: Standard Role Switch -> Confirm focus ---
                             else:
                                 reaction_msg = (
                                     f"🔄 **Profile Updated: {persona}**\n\n"
@@ -137,14 +173,14 @@ def render_sidebar():
                                     "What is your primary concern right now?"
                                 )
                         elif mode_changed:
-                            # Case C: Mode Switch -> Simple acknowledgement
+                            # --- Case C: Mode Switch -> Simple acknowledgement ---
                             reaction_msg = f"✅ Switched to **{app_mode}**. Ready for instructions."
 
-                        # Append to chat history so it appears immediately
+                        # --- Append to chat history so it appears immediately ---
                         if reaction_msg:
                             st.session_state.messages.append({"role": "assistant", "content": reaction_msg})
 
-                        # 4. Save Immediately & Rerun
+                        # --- 4. Save Immediately & Rerun ---
                         session_manager.save_user_session(st.session_state.username)
                         
                         st.toast(f"Context Updated: {persona}", icon="🔄")
@@ -220,17 +256,15 @@ def render_sidebar():
         # --- LOGOUT (FIXED FOR MULTIPLE LOGINS) ---
         st.markdown("---")
         if st.button("Log Out", use_container_width=True):
-            # 1. Clear Login Credentials
+            # --- 1. Clear Login Credentials ---
             st.session_state.logged_in = False
             st.session_state.username = ""
             
-            # 2. ✅ CRITICAL FIX: Delete 'data_loaded' flag
-            # This ensures that when you log in again, the app knows it needs to 
-            # re-fetch your file from the disk.
+            # --- 2. Delete 'data_loaded' flag to force data reload on next login ---
             if "data_loaded" in st.session_state:
                 del st.session_state["data_loaded"]
 
-            # 3. Clear Session Data
+            # --- 3. Clear Session Data but Preserve Login State (for next user) ---
             keys_to_clear = [
                 "messages", "assistant", "location_confirmed", 
                 "lat", "lon", "user_persona", "previous_persona", 
@@ -240,5 +274,5 @@ def render_sidebar():
                 if key in st.session_state:
                     del st.session_state[key]
             
-            # 4. Restart App
+            # --- 4. Restart App to back to Login Page ---
             st.rerun()

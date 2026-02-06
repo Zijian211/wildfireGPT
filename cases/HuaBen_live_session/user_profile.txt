@@ -1,0 +1,7 @@
+User: HuaBen
+Persona: Park Ranger  Tourism
+Profession: Park Ranger / Tourism
+Location: Latitude -33.797408767572485, Longitude 151.02081298828128
+Concern: Switched to 🏞️ Park Ranger / Tourism mode
+Timeline: 
+Created: 2026-02-06T13:37:15.160810

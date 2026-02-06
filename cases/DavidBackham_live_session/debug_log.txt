@@ -1,0 +1,24 @@
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\DavidBackham_live_session
+Loaded 9 interaction lines.
+Loaded 0 items from tools.txt
+Tools data empty. Falling back to Chat History parsing.
+Generated 5 evaluation items from Chat History.
+Active User Profile: User: DavidBackham
+Persona: Other Careers (StudentResearcher)
+Profession: Other Professional
+Locatio...
+Starting llm_evaluate loop...
+Evaluation finished successfully.
+Mode: Cloud/Local (local-model)
+Initializing evaluation for: E:\华子健 it master\Interview and Internship\Practice\WildfireGPT-main\WildfireGPT-main\cases\DavidBackham_live_session
+Loaded 9 interaction lines.
+Loaded 0 items from tools.txt
+Tools data empty. Falling back to Chat History parsing.
+Generated 5 evaluation items from Chat History.
+Active User Profile: User: DavidBackham
+Persona: Other Careers (StudentResearcher)
+Profession: Other Professional
+Locatio...
+Starting llm_evaluate loop...
+Evaluation finished successfully.

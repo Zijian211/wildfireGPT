@@ -1,51 +1,10 @@
 import streamlit as st
-import modules.account.auth as auth
-import pandas as pd
-import os
-import shutil
-import json
-import time
-import gc
-import pickle
-import glob
-from src.evaluation.eval_offline import Evaluator
-from src.modules.database.profile_manager import extract_profession_from_persona
 
-# ==========================================
-# --- THE DEBUG DOCTOR (File System Fixer) ---
-# ==========================================
-def diagnose_and_clean(folder_path):
-    """
-    Attempts to clean a folder safely. 
-    """
-    gc.collect() 
-    
-    # --- Ensure folder exists ---
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path, exist_ok=True)
-        return True, "Created new folder."
-
-    # --- Files to clean up before new run ---
-    files_to_remove = ["interaction.jsonl", "tools.txt", "user_profile.txt", "evaluation.csv", "data_dict.json"]
-    
-    for filename in files_to_remove:
-        file_path = os.path.join(folder_path, filename)
-        if os.path.exists(file_path):
-            success = False
-            for attempt in range(3):
-                try:
-                    os.remove(file_path)
-                    success = True
-                    break
-                except PermissionError:
-                    time.sleep(0.5) 
-                except Exception as e:
-                    return False, f"Error deleting {filename}: {str(e)}"
-            
-            if not success:
-                return False, f"LOCKED FILE: {filename} is currently in use. Please restart the app."
-
-    return True, "Cleaned successfully."
+# --- Import the separate tab modules ---
+from src.modules.account.admin.user_management import render_user_management_tab
+from src.modules.account.admin.chat_inspector import render_chat_inspector_tab
+from src.modules.account.admin.system_evaluation import render_system_evaluation_tab
+from src.modules.account.admin.AI_personaTesting import render_ai_persona_testing_tab
 
 # ==========================================
 # --- ADMIN DASHBOARD UI ---
@@ -54,360 +13,31 @@ def render_admin_dashboard():
     st.title("Admin Dashboard 🛠️")
     
     # --- Chat Inspector ---
-    tab1, tab2, tab3 = st.tabs(["User Management", "Chat Inspector", "System Evaluation"])
+    tab1, tab2, tab3, tab4 = st.tabs(["User Management", "Chat Inspector", "System Evaluation", "AI Persona Testing"])
 
     # =================================
     # --- TAB 1: USER MANAGEMENT ---
     # =================================
     with tab1:
-        st.subheader("Registered Users")
-        users = auth.get_all_users()
-        
-        if not users:
-            st.info("No users registered yet.")
-        else:
-            # --- Display User Details ---
-            user_list = []
-            for u, data in users.items():
-                
-                # --- Handle legacy string users with solely password hash ---
-                if isinstance(data, str):
-                    password_display = data[:15] + "..."
-                    sec_info = "None (Legacy Account)"
-                else:
-                    # --- Modern dict user with hashed password and security questions ---
-                    password_display = data.get('password', '')[:15] + "..."
-                    sec_info = "None"
-                    if "security_questions" in data and data["security_questions"]:
-                        sec_details = []
-                        for idx, item in enumerate(data["security_questions"]):
-                            sec_details.append(f"Q{idx+1}: {item['question']}")
-                        sec_info = "\n".join(sec_details)
-                
-                # --- Append to user list for display ---
-                user_list.append({
-                    "Username": u, 
-                    "Password Hash": password_display,
-                    "Security Data": sec_info
-                })
-            
-            # --- Show in expandable sections ---
-            for user_row in user_list:
-                with st.expander(f"👤 {user_row['Username']}"):
-                    col1, col2 = st.columns([1, 3])
-                    with col1:
-                        st.text("Password Hash:")
-                        st.code(user_row['Password Hash'], language="text")
-                        
-                        # --- Admin is allowed to delete users ---
-                        if st.button(f"Delete {user_row['Username']}", key=f"del_{user_row['Username']}"):
-                            if auth.delete_user(user_row['Username']):
-                                st.success(f"Deleted {user_row['Username']}")
-                                st.rerun()
-                    with col2:
-                        st.text("Security Questions:")
-                        st.text(user_row['Security Data'])
+        render_user_management_tab()
 
     # =================================
     # --- TAB 2: CHAT INSPECTOR ---
     # =================================
     with tab2:
-        st.subheader("🔍 Inspect User Sessions")
-        st.info("View user chat history safely (Maps/Images are hidden to prevent crashes).")
-
-        history_dir = "chat_history"
-        if not os.path.exists(history_dir):
-            st.warning("No chat history folder found.")
-        else:
-            # --- Find all session files ---
-            files = glob.glob(os.path.join(history_dir, "*_session_state.pkl"))
-            users_with_history = [os.path.basename(f).replace("_session_state.pkl", "") for f in files]
-
-            if not users_with_history:
-                st.info("No active sessions found.")
-            else:
-                selected_user_chat = st.selectbox("Select User:", users_with_history, key="inspect_user_select")
-                
-                if selected_user_chat:
-                    file_path = os.path.join(history_dir, f"{selected_user_chat}_session_state.pkl")
-                    try:
-                        # --- Check if file exists and has content ---
-                        if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
-                            st.warning(f"Session file for {selected_user_chat} is empty or corrupted.")
-                        else:
-                            with open(file_path, "rb") as f:
-                                # --- Safe Pickle Load ---
-                                try:
-                                    session_data = pickle.load(f)
-                                except AttributeError:
-                                    # --- Fallback if AssistantRouter class isn't imported ---
-                                    st.warning("⚠️ Some session objects could not be loaded. Showing raw text only.")
-                                    session_data = {"messages": [], "user_persona": "Unknown"}
-                                except Exception as e:
-                                    st.error(f"Error loading pickle file: {e}")
-                                    session_data = {"messages": [], "user_persona": "Unknown"}
-
-                            # --- Display Metadata ---
-                            st.caption(f"Role: **{session_data.get('user_persona', 'Unknown')}** | "
-                                      f"Lat: {session_data.get('lat', 'N/A')} | "
-                                      f"Lon: {session_data.get('lon', 'N/A')}")
-                            st.divider()
-
-                            # --- Render Messages Safely ---
-                            messages = session_data.get("messages", [])
-                            if not messages:
-                                st.info("No chat messages found in this session.")
-                            else:
-                                for msg in messages:
-                                    role = msg.get("role", "unknown")
-                                    content = msg.get("content", "")
-                                    
-                                    with st.chat_message(role):
-                                        # --- Handle Tuples (Text, Map) ---
-                                        if isinstance(content, tuple):
-                                            st.markdown(content[0]) # Display text only
-                                            st.caption("*(Interactive Map/Chart Hidden in Admin View)*")
-                                        else:
-                                            st.markdown(content)
-                                    
-                    except Exception as e:
-                        st.error(f"Could not load session: {e}")
+        render_chat_inspector_tab()
 
     # =================================
     # --- TAB 3: SYSTEM EVALUATION ---
     # =================================
     with tab3:
-        st.subheader("Evaluation for AI Conversation Quality of WildfireGPT")
-        st.info("This tool runs the evaluation script on a specific user's interaction history.")
+        render_system_evaluation_tab()
 
-        # --- 1. Select User Case ---
-        case_root = os.path.abspath("cases") # --- Force Absolute Path ---
-        if not os.path.exists(case_root):
-            os.makedirs(case_root)
-            
-        available_users = [f.replace("_interaction.jsonl", "") for f in os.listdir("chat_history") if f.endswith("_interaction.jsonl")]
-        
-        if not available_users:
-            st.warning("No chat history found.")
-        else:
-            selected_user = st.selectbox("Select User Session to Evaluate", available_users)
-            
-            if st.button("1. Prepare Data & Run Evaluation"):
-                # --- Use absolute path to prevent folder confusion ---
-                case_folder = os.path.join(case_root, f"{selected_user}_live_session")
-                
-                # --- A. CLEANUP ---
-                status, msg = diagnose_and_clean(case_folder)
-                if not status:
-                    st.error(f"⚠️ {msg}")
-                    st.stop()
-                
-                # --- B. GENERATE EVALUATION DATA (From Pickle) ---
-                session_file = os.path.join("chat_history", f"{selected_user}_session_state.pkl")
-                dst_interaction = os.path.join(case_folder, "interaction.jsonl")
-
-                if os.path.exists(session_file) and os.path.getsize(session_file) > 0:
-                    try:
-                        with open(session_file, "rb") as f:
-                            saved_state = pickle.load(f)
-        
-                        # --- 1. Extract Messages ---
-                        messages = saved_state.get("messages", [])
-                        if not messages:
-                            st.error("⚠️ Chat history is empty in the session file.")
-                            st.stop()
-        
-                        # --- 2. Write to interaction.jsonl ---
-                        with open(dst_interaction, "w", encoding="utf-8") as outfile:
-                            for msg in messages:
-                                role = msg.get("role", "unknown")
-                                content = msg.get("content", "")
-                
-                                if isinstance(content, tuple):
-                                    content = content[0]
-                
-                                entry = {
-                                    "role": role, 
-                                    "content": str(content)
-                                }
-                                outfile.write(json.dumps(entry, ensure_ascii=False) + "\n")
-                
-                        # --- 3. Extract Context Files ---
-                        tools_path = os.path.join("chat_history", "tools.txt")
-                        if os.path.exists(tools_path):
-                            with open(tools_path, "r", encoding="utf-8") as tf:
-                                tools_content = tf.read()
-                        else:
-                            tools_content = "Tools: No tools data available."
-        
-                        with open(os.path.join(case_folder, "tools.txt"), "w", encoding="utf-8") as t:
-                            t.write(tools_content)
-        
-                        # --- USER PROFILE EXTRACTION ---
-                        json_profile_path = os.path.join("chat_history", f"{selected_user}_eval_profile.json")
-                        text_profile_path = os.path.join("chat_history", f"{selected_user}_profile.txt")
-                        old_profile_path = os.path.join("chat_history", "user_profile.txt")
-        
-                        user_profile_content = ""
-        
-                        if os.path.exists(json_profile_path):
-                            try:
-                                with open(json_profile_path, "r", encoding="utf-8") as jf:
-                                    profile_data = json.load(jf)
-                                # Use persona_clean if available, otherwise persona
-                                persona = profile_data.get('persona_clean', profile_data.get('persona', 'Unknown'))
-                                user_profile_content = f"""User: {profile_data.get('username', selected_user)}
-Persona: {persona}
-Profession: {profile_data.get('profession', 'Unknown')}
-Location: Latitude {profile_data.get('location', {}).get('lat', 'Unknown')}, Longitude {profile_data.get('location', {}).get('lon', 'Unknown')}
-Concern: {profile_data.get('concern', 'Wildfire risk assessment')}
-Timeline: {profile_data.get('timeline', 'Current assessment')}
-Created: {profile_data.get('created_at', 'Unknown')}"""
-                            except Exception as e:
-                                st.warning(f"Could not read JSON profile: {e}")
-                        elif os.path.exists(text_profile_path):
-                            with open(text_profile_path, "r", encoding="utf-8") as pf:
-                                user_profile_content = pf.read()
-                        elif os.path.exists(old_profile_path):
-                            with open(old_profile_path, "r", encoding="utf-8") as pf:
-                                user_profile_content = pf.read()
-                        else:
-                            persona = saved_state.get("user_persona", "👨‍🚒 Emergency Commander (Gov)")
-                            lat = saved_state.get("lat", "Unknown")
-                            lon = saved_state.get("lon", "Unknown")
-
-                            # --- Remove emojis from persona for text file ---
-                            import re
-                            persona_clean = re.sub(r'[^\w\s\-\(\)]', '', persona).strip()
-
-                            # --- Analyze conversation for actual personas used ---
-                            conversation_personas = []
-                            for msg in messages:
-                                if msg.get("role") == "assistant":
-                                    content = msg.get("content", "")
-                                    if isinstance(content, tuple):
-                                        content = content[0]
-                                    
-                                    # --- Check for persona mentions ---
-                                    if 'School Principal' in content:
-                                        conversation_personas.append('School Principal')
-                                    elif 'Logistics Manager' in content:
-                                        conversation_personas.append('Logistics Manager')
-                                    elif 'Insurance Risk Assessor' in content:
-                                        conversation_personas.append('Insurance Risk Assessor')
-                                    elif 'Power Grid Operator' in content:
-                                        conversation_personas.append('Power Grid Operator')
-                                    elif 'Real Estate Developer' in content:
-                                        conversation_personas.append('Real Estate Developer')
-                                    elif 'Park Ranger' in content or 'Tourism' in content:
-                                        conversation_personas.append('Park Ranger / Tourism')
-                                    elif 'Other Careers' in content:
-                                        conversation_personas.append('Other Professional')
-                                    elif 'Emergency Commander' in content:
-                                        conversation_personas.append('Emergency Commander (Gov)')
-
-                            # --- Deduplicate while preserving order ---
-                            seen = set()
-                            unique_personas = []
-                            for p in conversation_personas:
-                                if p not in seen:
-                                    seen.add(p)
-                                    unique_personas.append(p)
-
-                            # --- Determine profession based on conversation flow ---
-                            if len(unique_personas) > 0:
-                                # --- Use the most common persona or the last one ---
-                                from collections import Counter
-                                persona_counter = Counter(conversation_personas)
-                                most_common_persona = persona_counter.most_common(1)[0][0] if persona_counter else unique_personas[-1]
-                                profession = most_common_persona
-                            else:
-                                profession = extract_profession_from_persona(persona)
-
-                            concern = "Wildfire risk assessment"
-                            for msg in messages:
-                                if msg.get("role") == "user" and len(msg.get("content", "")) > 10:
-                                    content = msg.get("content", "")
-                                    if isinstance(content, tuple):
-                                        content = content[0]
-                                    concern = content[:100] + "..." if len(content) > 100 else content
-                                    break
-                            
-                            user_profile_content = f"""User: {selected_user}
-Persona: {persona_clean}
-Profession: {profession}
-Location: Latitude {lat}, Longitude {lon}
-Concern: {concern}
-Timeline: Current assessment
-Actual Personas in Conversation: {', '.join(unique_personas) if unique_personas else 'None detected'}
-Status: Live consultation session
-Notes: Profile generated from session data with persona analysis"""
-
-                        with open(os.path.join(case_folder, "user_profile.txt"), "w", encoding="utf-8") as p:
-                            p.write(user_profile_content)
-
-                    except Exception as e:
-                        st.error(f"Failed to generate evaluation data from session: {e}")
-                        st.write(f"Error details: {str(e)}")
-                        st.stop()
-                else:
-                    st.error(f"❌ Session file not found or is empty: {session_file}")
-                    st.stop()
-
-                # --- C. RUN EVALUATION ---
-                progress_bar = st.progress(0)
-                status_text = st.empty()
-                
-                try:
-                    args = {
-                        'llm_model': 'gpt-4-turbo', 
-                        'case_folder': case_folder, # --- Passing absolute path ---
-                        'verbose': False
-                    }
-                    
-                    status_text.text("Initializing Evaluator...")
-                    evaluator = Evaluator(args)
-                    
-                    status_text.text("Running LLM Evaluation (this may take a minute)...")
-                    evaluator.llm_evaluate()
-                    
-                    # --- Give file system a moment to write the CSV ---
-                    time.sleep(2)
-                    
-                    progress_bar.progress(100)
-                    status_text.success("Evaluation Complete!")
-                    
-                    # --- D. DISPLAY RESULTS ---
-                    csv_path = os.path.join(case_folder, "evaluation.csv")
-                    
-                    if os.path.exists(csv_path):
-                        eval_df = pd.read_csv(csv_path)
-                        st.divider()
-                        st.markdown("### 📊 Evaluation Results")
-                        
-                        if eval_df.empty:
-                            st.warning("Evaluation ran, but the CSV is empty.")
-                        else:
-                            # --- Metrics ---
-                            col1, col2 = st.columns(2)
-                            total_checks = len(eval_df)
-                            passed_checks = len(eval_df[eval_df['input_score'].astype(str).str.contains("Yes", na=False)])
-                            
-                            col1.metric("Total Interactions Checked", total_checks)
-                            pass_rate = int((passed_checks/total_checks)*100) if total_checks > 0 else 0
-                            col2.metric("Pass Rate", f"{pass_rate}%")
-                            
-                            st.subheader("Detailed Report")
-                            st.dataframe(eval_df[['aspect', 'input_score', 'reasoning']], use_container_width=True)
-                    else:
-                        # --- DEBUG INFO IF FAILS ---
-                        st.error("Evaluation script ran, but 'evaluation.csv' was not found.")
-                        st.write(f"📂 Checked folder: `{case_folder}`")
-                        st.write("📂 Files actually found there:", os.listdir(case_folder))
-                        
-                except Exception as e:
-                    st.error(f"Evaluation Process Failed: {str(e)}")
-                    st.write(e)
+    # =================================
+    # --- TAB 4: AI PERSONA TESTING ---
+    # =================================
+    with tab4:
+        render_ai_persona_testing_tab()
 
     st.markdown("---")
     if st.button("Log Out"):

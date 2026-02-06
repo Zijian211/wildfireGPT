@@ -1,0 +1,27 @@
+{
+  "summary": {
+    "total_tests": 0,
+    "passed_tests": 0,
+    "failed_tests": 0,
+    "success_rate": 0,
+    "average_coverage": 0,
+    "average_response_time": 0
+  },
+  "by_persona": {},
+  "detailed_results": [],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test LOG_01 completed in 20.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test LOG_02 completed in 24.2s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 15.1s"
+    }
+  ],
+  "generated_at": "2026-02-06T15:57:26.097719"
+}
