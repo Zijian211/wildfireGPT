@@ -1,223 +1,220 @@
-# 🔥 WildfireGPT - AI-Powered Wildfire Risk Assessment Platform
+🔥 WildfireGPT
 
-WildfireGPT is a comprehensive AI-powered consultation platform designed to provide specialized wildfire risk assessments for various professional personas. Built with **Streamlit** and **Python**, it features a sophisticated "Hybrid AI" architecture that adapts to different user roles and provides context-aware recommendations.
+AI-Powered Wildfire Risk Assessment Platform
 
-## 🚀 Key Features
+WildfireGPT is an AI-driven consultation platform that delivers role-specific wildfire risk assessments for professionals across emergency response, infrastructure, insurance, logistics, and land management.
 
-### 🔐 1. Professional Role-Based System
-* **Multi-Persona Support:** 7 specialized professional roles with tailored AI responses
-* **Role-Specific Focus:** Each persona has customized system prompts and risk assessment priorities
-* **Smart Context Switching:** Maintains conversation history when switching between roles
-* **Real-time Adaptation:** AI adjusts responses based on selected profession and operation mode
+Built with Streamlit + Python, it uses a Hybrid AI architecture to adapt responses based on professional context while supporting both cloud and offline local AI modes.
 
-### 👥 2. User Management System
-* **Secure Authentication:** Complete sign-up and login functionality with password hashing (Bcrypt)
-* **Session Management:** Auto-saves chat history and restores sessions upon login
-* **Security Questions:** Account recovery with customizable security questions
-* **Admin Dashboard:** Comprehensive user management and system monitoring tools
+✨ Key Features
+👤 Role-Based AI Personas
 
-### 📊 3. Advanced AI Capabilities
-* **Persona-Aware Responses:** AI adapts language and focus areas based on selected role
-* **Document Analysis:** Upload and analyze PDF, DOCX, CSV, and TXT files for context
-* **Location Intelligence:** Interactive map integration for geographical risk assessment
-* **Hybrid AI Engine:**
-  * **Local Mode:** Connects to **LM Studio** for offline, private use
-  * **Cloud Mode:** Automatically switches to **Groq API** (Llama 3) when deployed
+7 Professional Personas (Emergency, Insurance, Utilities, Logistics, Real Estate, Parks, General)
 
-### 🧪 4. Testing & Evaluation Framework
-* **Automated Persona Testing:** Comprehensive test suite for all professional roles
-* **Scenario-Based Testing:** Pre-defined test cases for each persona
-* **Performance Metrics:** Aspect coverage analysis and response quality assessment
-* **Admin Testing Interface:** Built-in testing dashboard for quality assurance
+Context-aware language and recommendations
 
-### 📄 5. Professional Reporting
-* **PDF Export:** Generate formatted consultation reports with one click
-* **Chat History:** Complete conversation logging and session management
-* **Evaluation Reports:** Detailed test performance analysis for system improvement
+Switch roles without losing conversation history
 
-## 👥 Professional Personas Supported
+🤖 Hybrid AI Engine
 
-| Persona | Focus Areas | Use Case |
-|---------|------------|----------|
-| 👨‍🚒 **Emergency Commander (Gov)** | Evacuation planning, Resource allocation, Public safety | Government emergency response |
-| 🛡️ **Insurance Risk Assessor** | Financial exposure, Policy analysis, Risk mitigation | Insurance industry risk assessment |
-| ⚡ **Power Grid Operator** | Infrastructure vulnerability, PSPS protocols, Grid resilience | Utility company operations |
-| 🚚 **Logistics Manager** | Supply chain disruption, Route planning, Inventory management | Transportation and logistics |
-| 🏗️ **Real Estate Developer** | Building codes, Material costs, Compliance requirements | Construction and development |
-| 🏞️ **Park Ranger / Tourism** | Visitor safety, Park closures, Economic impact | Tourism and park management |
-| 🎓 **Other Careers** | Custom role adaptation, General risk assessment | Researchers, Students, etc. |
+Local Mode: Offline & private inference via LM Studio
 
-## 🛠️ Technical Architecture
+Cloud Mode: High-performance inference using Groq (Llama 3)
 
-### Core Components
+OpenAI-compatible API layer
+
+📍 Location & Document Intelligence
+
+Interactive map for geographic wildfire assessment
+
+Upload and analyze PDF, DOCX, CSV, TXT
+
+Context-aware insights based on uploaded data
+
+🔒 User & Admin Management
+
+Secure authentication (Bcrypt password hashing)
+
+Persistent chat sessions
+
+Account recovery via security questions
+
+Admin dashboard for monitoring and evaluation
+
+📄 Reporting & Export
+
+Generate PDF consultation reports
+
+Export chat histories
+
+Evaluation & QA reports for AI performance
+
+👥 Supported Personas
+Persona	Focus Areas	Typical Use Case
+👨‍🚒 Emergency Commander	Evacuation, resources, public safety	Government response
+🛡️ Insurance Risk Assessor	Financial exposure, policy risk	Insurance industry
+⚡ Power Grid Operator	Infrastructure, PSPS, resilience	Utilities
+🚚 Logistics Manager	Route planning, supply chains	Transportation
+🏗️ Real Estate Developer	Building codes, compliance	Construction
+🏞️ Park Ranger / Tourism	Visitor safety, closures	Tourism & parks
+🎓 Other Careers	Generalized risk analysis	Research & education
+🏗️ Architecture Overview
 src/
-├── assistants/ # AI assistant implementations
+├── assistants/              # AI assistant logic
 ├── modules/
-│ ├── account/ # Authentication & user management
-│ ├── admin/ # Admin dashboard components
-│ ├── database/ # Session and profile management
-│ └── ui/ # User interface components
-├── test_scenarios/ # Automated testing framework
-└── evaluation/ # System evaluation tools
+│   ├── account/             # Authentication & profiles
+│   ├── admin/               # Admin dashboard
+│   ├── database/            # Session storage
+│   ├── ui/                  # Streamlit UI components
+│   └ test_scenarios/          # Automated persona tests
+└── evaluation/              # QA & evaluation tools
+🧰 Technology Stack
 
-text
+Frontend: Streamlit
 
-### Key Technologies
-* **Frontend:** Streamlit with custom UI components
-* **Backend:** Python 3.10+ with async support
-* **AI Integration:** OpenAI-compatible API (Groq/LM Studio)
-* **Data Processing:** Pandas, PyPDF2, python-docx
-* **Security:** Bcrypt for password hashing
-* **Reporting:** FPDF for PDF generation
+Backend: Python 3.10+
 
-## 📋 Installation & Setup
+AI: Groq API / LM Studio (local)
 
-### Prerequisites
-* Python 3.10+
-* [Poetry](https://python-poetry.org/) (Recommended) or Pip
+Data Processing: Pandas, PyPDF2, python-docx
 
-### 1. Clone the Repository
-```bash
+Security: Bcrypt
+
+Reporting: FPDF
+
+🚀 Getting Started
+Prerequisites
+
+Python 3.10+
+
+Poetry (recommended) or pip
+
+Installation
 git clone https://github.com/Zijian211/wildfireGPT.git
 cd wildfireGPT
-2. Install Dependencies
-bash
-# Using Poetry (Recommended)
+Install dependencies
+# Poetry (recommended)
 poetry install
 
-# OR using pip
+
+# OR pip
 pip install -r requirements.txt
-3. Configuration
-bash
-# Copy environment template
+Configuration
 cp .env.example .env
 
-# Edit .env file with your settings:
-# - GROQ_API_KEY (for cloud mode)
-# - Local LM Studio settings (for offline mode)
-4. Run the Application
-bash
-# Development mode
+Edit .env:
+
+GROQ_API_KEY (for cloud mode)
+
+LM Studio settings (for local mode)
+
+Run the App
 streamlit run src/wildfireChat.py
 
-# Or with poetry
+or
+
 poetry run streamlit run src/wildfireChat.py
-🎯 Usage Guide
-1. First-Time Setup
-Register a new account or use admin credentials
 
-Confirm location on the interactive map
+Access at: http://localhost:8501
 
-Select your professional role from the sidebar
+📖 Usage Guide
+First-Time Users
 
-Choose operation mode (Checklist, Strategic Plan, Data Analysis, Dashboard)
+Register or log in
 
-2. Chat Interface
-Ask questions related to your wildfire risk concerns
+Confirm location on the map
 
-Upload documents for context-specific analysis
+Select your professional persona
 
-Switch personas at any time without losing conversation history
+Choose operation mode:
 
-Generate reports of your consultation session
+Checklist
 
-3. Admin Features
-User Management: View and manage registered users
+Strategic Planning
 
-Chat Inspector: Review user sessions (safely anonymized)
+Data Analysis
 
-System Evaluation: Run quality assessments on AI responses
+Dashboard
 
-AI Testing: Execute automated persona tests and view results
+Chat & Analysis
 
-🔧 Development
-Running Tests
-bash
-# Run all persona tests
-python run_tests.py --persona all --output test_results.json
+Ask wildfire-related questions
 
-# Test specific persona
+Upload documents for contextual analysis
+
+Switch roles anytime
+
+Export reports as PDF
+
+Admin Dashboard
+
+User management
+
+Chat inspection (anonymized)
+
+AI evaluation & testing
+
+Persona performance analysis
+
+🧪 Testing & Evaluation
+
+Run automated persona tests:
+
+# All personas
+python run_tests.py --persona all
+
+
+# Specific persona
 python run_tests.py --persona "🛡️ Insurance Risk Assessor"
 
-# With verbose output
+
+# Verbose mode
 python run_tests.py --persona all --verbose
-Project Structure
-src/wildfireChat.py - Main application entry point
+Metrics Tracked
 
-src/assistants/ - AI assistant implementations
+Response relevance
 
-src/modules/admin/ - Admin dashboard components
+Aspect coverage
 
-src/test_scenarios/ - Automated testing framework
+Persona accuracy
 
-run_tests.py - Command-line test runner
+Response time
 
-📈 Evaluation Metrics
-The system tracks:
+🌐 Deployment
+Streamlit Cloud
 
-Response Relevance: How well answers match user roles and questions
+Push to GitHub
 
-Aspect Coverage: Percentage of expected focus areas addressed
+Connect repository to Streamlit Cloud
 
-Response Time: AI processing speed for different scenarios
+Set environment variables
 
-Persona Accuracy: How well AI adapts to different professional roles
-
-🚀 Deployment
-Cloud Deployment (Streamlit Cloud)
-Push code to GitHub repository
-
-Connect to Streamlit Cloud
-
-Set environment variables in cloud dashboard
-
-Deploy with automatic scaling
+Deploy 🚀
 
 Local Deployment
-Configure .env file for local LM Studio
 
-Run with streamlit run src/wildfireChat.py
+Configure .env
 
-Access at http://localhost:8501
+Run via Streamlit or Poetry
 
 📄 License
-MIT License - see LICENSE file for details
+
+MIT License — see LICENSE
 
 🙏 Acknowledgements
-Streamlit for the powerful web app framework
 
-Groq API for high-performance AI inference
+Streamlit
 
-LM Studio for local AI model serving
+Groq API
 
-OpenAI API compatibility layer for seamless integration
+LM Studio
 
-📞 Support
-For issues, feature requests, or contributions:
+OpenAI-compatible ecosystem
 
-Check the Issues page
+🤝 Contributing & Support
 
-Create a new issue with detailed description
+Check Issues for bugs or feature requests
 
-Pull requests welcome for bug fixes and enhancements
+Pull requests are welcome
 
-Note: This project is for educational and research purposes. Always consult with certified wildfire safety professionals for critical safety decisions.
-
-text
-
-## Key Updates Made:
-
-1. **Added Professional Personas Section** - Lists all 7 roles with their focus areas
-2. **Enhanced Testing Framework Description** - Details about the automated testing system
-3. **Updated Architecture** - Shows the new modular structure with admin and testing components
-4. **Usage Guide** - More detailed instructions for different user types
-5. **Development Section** - Includes test runner commands and project structure
-6. **Evaluation Metrics** - Describes what the system tracks for quality assurance
-7. **Persona-Specific Examples** - Shows how each role gets tailored responses
-
-The README now accurately reflects:
-- The persona-based system you implemented
-- The admin testing interface
-- The automated test runner
-- The professional use cases
-- The technical architecture with separate admin modules
+Contributions that improve personas or evaluation are especially appreciated
