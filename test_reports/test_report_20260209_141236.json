@@ -1,0 +1,90 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 100.0,
+    "average_response_time": 10.2
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "⚡ Power Grid Operator": 100.0
+    },
+    "response_time": {
+      "⚡ Power Grid Operator": 10.2
+    },
+    "test_id": {
+      "⚡ Power Grid Operator": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "PWR_01",
+      "persona": "⚡ Power Grid Operator",
+      "question": "We're planning PSPS (Public Safety Power Shutoff) for next week with 40mph winds forecasted. What's the minimum vegetation clearance needed for our 69kV lines, and how many customers will be affected?",
+      "response": "Thank you for reaching out to me as a Power Grid Operator. I'd be happy to provide you with the necessary information for your Public Safety Power Shutoff (PSPS) planning.\n\nFor our 69kV lines, we require a minimum vegetation clearance of 15 feet (4.57 meters) around the conductors and towers. This is to ensure that there's sufficient space for maintenance activities, as well as to reduce the risk of tree contact and subsequent outages.\n\nRegarding the PSPS planning, I'd like to clarify a few deta...",
+      "response_time": 8.86,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "technical specifications",
+        "customer impact",
+        "safety protocols"
+      ],
+      "covered_aspects": [
+        "technical specifications",
+        "customer impact",
+        "safety protocols"
+      ],
+      "timestamp": "2026-02-09T14:12:24.827097",
+      "status": "completed"
+    },
+    {
+      "test_id": "PWR_02",
+      "persona": "⚡ Power Grid Operator",
+      "question": "A substation is in Red Flag warning area. Should we de-energize proactively? What's the cost-benefit of 24-hour outage vs. wildfire liability?",
+      "response": "Thank you for your question. As a Power Grid Operator, I'll provide an analysis of the situation.\n\nThe substation located in a Red Flag warning area presents a significant risk to our grid infrastructure and public safety. Wildfires can spread quickly and unpredictably, posing a threat to both human life and our critical infrastructure.\n\nProactively de-energizing the substation is a crucial decision that requires careful consideration of the cost-benefit analysis you mentioned. Here's my assessm...",
+      "response_time": 11.53,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "risk assessment",
+        "cost analysis",
+        "operational decision"
+      ],
+      "covered_aspects": [
+        "risk assessment",
+        "cost analysis",
+        "operational decision"
+      ],
+      "timestamp": "2026-02-09T14:12:36.362425",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 14.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 11.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 17.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 10.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 8.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 11.5s"
+    }
+  ],
+  "generated_at": "2026-02-09T14:12:36.367413"
+}

@@ -1,0 +1,66 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 0.0,
+    "average_response_time": 12.98
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "🛡️ Insurance Risk Assessor": 0.0
+    },
+    "response_time": {
+      "🛡️ Insurance Risk Assessor": 12.98
+    },
+    "test_id": {
+      "🛡️ Insurance Risk Assessor": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "INS_01",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "I have a portfolio of 50 commercial properties in Northern California. What's my maximum probable loss for a Category 3 wildfire event, and what premium increase should I expect?",
+      "response": "Error connecting to API.",
+      "response_time": 14.5,
+      "aspect_coverage": 0.0,
+      "expected_aspects": [
+        "financial estimates",
+        "policy analysis",
+        "risk mitigation"
+      ],
+      "covered_aspects": [],
+      "timestamp": "2026-02-09T14:10:45.533993",
+      "status": "completed"
+    },
+    {
+      "test_id": "INS_02",
+      "persona": "🛡️ Insurance Risk Assessor",
+      "question": "A client's warehouse burned down. They have business interruption coverage with a 72-hour waiting period. The fire lasted 5 days. What percentage of their lost revenue is covered?",
+      "response": "Error connecting to API.",
+      "response_time": 11.47,
+      "aspect_coverage": 0.0,
+      "expected_aspects": [
+        "claims process",
+        "coverage details",
+        "financial calculation"
+      ],
+      "covered_aspects": [],
+      "timestamp": "2026-02-09T14:10:57.023496",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 14.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 11.5s"
+    }
+  ],
+  "generated_at": "2026-02-09T14:10:57.066205"
+}

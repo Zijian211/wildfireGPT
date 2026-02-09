@@ -1,0 +1,98 @@
+{
+  "summary": {
+    "total_tests": 2,
+    "passed_tests": 2,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "average_coverage": 100.0,
+    "average_response_time": 10.21
+  },
+  "by_persona": {
+    "aspect_coverage": {
+      "⚡ Power Grid Operator": 100.0
+    },
+    "response_time": {
+      "⚡ Power Grid Operator": 10.21
+    },
+    "test_id": {
+      "⚡ Power Grid Operator": 2
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "PWR_01",
+      "persona": "⚡ Power Grid Operator",
+      "question": "We're planning PSPS (Public Safety Power Shutoff) for next week with 40mph winds forecasted. What's the minimum vegetation clearance needed for our 69kV lines, and how many customers will be affected?",
+      "response": "Let's go through the checklist to gather more information.\n\n**Location:** Can you please specify the exact location of your 69kV lines?\n\n**Concern:** You've mentioned PSPS due to strong winds. What is the specific concern regarding vegetation clearance?\n\n**Time:** Since we're planning for next week, can you confirm the exact date and time of the forecasted high wind event?\n\n**Profession:** As a Power Grid Operator, I assume you have a good understanding of grid operations and infrastructure. But...",
+      "response_time": 6.87,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "technical specifications",
+        "customer impact",
+        "safety protocols"
+      ],
+      "covered_aspects": [
+        "technical specifications",
+        "customer impact",
+        "safety protocols"
+      ],
+      "timestamp": "2026-02-09T14:13:02.093025",
+      "status": "completed"
+    },
+    {
+      "test_id": "PWR_02",
+      "persona": "⚡ Power Grid Operator",
+      "question": "A substation is in Red Flag warning area. Should we de-energize proactively? What's the cost-benefit of 24-hour outage vs. wildfire liability?",
+      "response": "As a Power Grid Operator, I'd like to clarify that our primary concern is ensuring the reliability and integrity of the grid while minimizing the risk of wildfires.\n\nIn this scenario, since the substation is located in a Red Flag warning area, we must consider the potential risks associated with high winds, dry conditions, and vegetation nearby. Our priority is to prevent any ignition sources from triggering a wildfire near the substation or affecting the surrounding area.\n\nRegarding de-energiza...",
+      "response_time": 13.55,
+      "aspect_coverage": 100.0,
+      "expected_aspects": [
+        "risk assessment",
+        "cost analysis",
+        "operational decision"
+      ],
+      "covered_aspects": [
+        "risk assessment",
+        "cost analysis",
+        "operational decision"
+      ],
+      "timestamp": "2026-02-09T14:13:15.658484",
+      "status": "completed"
+    }
+  ],
+  "test_log": [
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 14.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 11.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_01 completed in 17.4s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test INS_02 completed in 10.3s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 8.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 11.5s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_01 completed in 6.9s"
+    },
+    {
+      "type": "info",
+      "message": "✅ Test PWR_02 completed in 13.6s"
+    }
+  ],
+  "generated_at": "2026-02-09T14:13:15.666479"
+}
