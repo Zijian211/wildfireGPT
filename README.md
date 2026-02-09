@@ -49,23 +49,25 @@ Built with Streamlit + Python, it uses a Hybrid AI architecture to adapt respons
 
 
 # 👥 Supported Personas (Persona->Focus Areas->Typical Use Case)
-👨‍🚒 Emergency Commander -> Evacuation, resources, public safety ->Government response
-🛡️ Insurance Risk Assessor->Financial exposure, policy risk->Insurance industry
-⚡ Power Grid Operator->Infrastructure, PSPS, resilience->Utilities
-🚚 Logistics Manager	->Route planning, supply chains->Transportation
-🏗️ Real Estate Developer->Building codes, compliance->Construction
-🏞️ Park Ranger / Tourism->Visitor safety, closures->Tourism \& parks
-🎓 Other Careers->Generalized risk analysis->Research \& education
+* 👨‍🚒 Emergency Commander -> Evacuation, resources, public safety ->Government response
+* 🛡️ Insurance Risk Assessor->Financial exposure, policy risk->Insurance industry
+* ⚡ Power Grid Operator->Infrastructure, PSPS, resilience->Utilities
+* 🚚 Logistics Manager	->Route planning, supply chains->Transportation
+* 🏗️ Real Estate Developer->Building codes, compliance->Construction
+* 🏞️ Park Ranger / Tourism->Visitor safety, closures->Tourism \& parks
+* 🎓 Other Careers->Generalized risk analysis->Research \& education
+
 
 
 # 🏗️ Architecture Overview
-src/assistants/             (AI assistant logic)
-src/modules/account/             (Authentication \& profiles)
-src/modules/account/admin/               (Admin dashboard)
-src/modules/database/            (Session storage)
-src/modules/ui/                  (Streamlit UI components)
-src/modules/test\_scenarios/          (Automated persona tests)
-src/evaluation/              (QA \& evaluation tools)
+* src/assistants/             (AI assistant logic)
+* src/modules/account/             (Authentication \& profiles)
+* src/modules/account/admin/               (Admin dashboard)
+* src/modules/database/            (Session storage)
+* src/modules/ui/                  (Streamlit UI components)
+* src/modules/test_scenarios/          (Automated persona tests)
+* src/evaluation/              (QA \& evaluation tools)
+
 
 
 # 🧰 Technology Stack
@@ -166,6 +168,8 @@ Access at: http://localhost:8501
 * Switch roles anytime
 * Export reports as PDF
 
+
+
 ## Admin Dashboard
 
 * User management
@@ -175,8 +179,7 @@ Access at: http://localhost:8501
 
 
 
-#🧪 Testing \& Evaluation
-
+# 🧪 Testing \& Evaluation
 ## Run automated persona tests:
 
 ```
@@ -196,8 +199,6 @@ python run\_tests.py --persona all --verbose # --- Verbose mode ---
 * Aspect coverage
 * Persona accuracy
 * Response time
-
-
 
 
 
